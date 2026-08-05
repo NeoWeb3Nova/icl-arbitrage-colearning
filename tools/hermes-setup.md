@@ -8,8 +8,15 @@
 
 - 官网: https://hermes-agent.nousresearch.com/docs/
 - 中文社区: [@hermescn_org](https://x.com/@hermescn_org)
-- 安装: [待配置]
-- 配置: [待配置]
+- 当前策略：先本地跑通，再按定时任务、长时间计算、消息入口和节点需求扩容
+- 新版整理：`research/initiator-hermes-setup-2026-08-04.md`
+
+## 最小配置原则
+
+1. 本地 Hermes Desktop/CLI 跑通模型和一个消息入口。
+2. 长期使用再按主题建立 Telegram Topics 或飞书分区：套利学习、策略研究、数据与回测、开发、打卡。
+3. 数据量变大后再评估 PostgreSQL；不要把策略数据塞进 Hermes memory。
+4. Access Key、API Key、私钥和助记词只通过环境变量/密钥管理器注入，绝不写入仓库、Obsidian 或聊天。
 
 ## Bruce 的使用思路
 

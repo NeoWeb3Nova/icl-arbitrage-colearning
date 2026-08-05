@@ -6,6 +6,7 @@
 > 
 > 发起原文: [X / Twitter](https://x.com/brucexu_eth/status/2082831191376613391)
 > 最新说明: [为什么我在熊市发起链上套利残酷共学？顺便分享下我的学习大纲](https://x.com/brucexu_eth/status/2083935229757337948)（2026-08-02）
+> Hermes 配置更新: [从零配置一个链上套利辅助和学习的 Hermes Agent](https://x.com/brucexu_eth/status/2084604766714261729)（2026-08-04）
 > Obsidian 专栏: `D:\ObsidianWorkspace\Neo\链上套利残酷共学`（入口：`00-专栏首页.md`）
 
 ## 我的目标
@@ -24,7 +25,7 @@
 2. **第二周**：公开案例还原、数据脚本、Hermes 候选机会检查、回测与 Paper Trading。
 3. **第三周**：筛选 2–5 个符合个人能力圈的方向，深挖 Edge，留下验证脚本或明确否定证据。
 
-完整整理见 [research/initiator-guidance-2026-08-02.md](./research/initiator-guidance-2026-08-02.md)；人物、学习样本与工具资料见 [research/people-and-tools.md](./research/people-and-tools.md)。现有 5 个模块继续保留，作为三周路线下的内部工作包。
+完整整理见 [research/initiator-guidance-2026-08-02.md](./research/initiator-guidance-2026-08-02.md)；Hermes 配置更新见 [research/initiator-hermes-setup-2026-08-04.md](./research/initiator-hermes-setup-2026-08-04.md)；人物、学习样本与工具资料见 [research/people-and-tools.md](./research/people-and-tools.md)。现有 5 个模块继续保留，作为三周路线下的内部工作包。
 
 ## 项目结构
 
@@ -44,7 +45,8 @@ icl-arbitrage-colearning/
 │   ├── week2/                   ← 08.12–08.18
 │   └── week3/                   ← 08.19–08.26
 ├── research/                    ← 研究发现
-│   ├── initiator-guidance-2026-08-02.md ← 发起者最新说明整理
+│   ├── initiator-guidance-2026-08-02.md ← 发起者路线说明整理
+│   ├── initiator-hermes-setup-2026-08-04.md ← Hermes 配置与学习 Prompt 更新
 │   ├── people-and-tools.md         ← 学习榜样、证据边界与工具地图
 │   ├── opportunities.md         ← 发现的机会结构
 │   ├── papers-and-reading.md    ← 阅读清单
