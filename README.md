@@ -48,6 +48,8 @@ icl-arbitrage-colearning/
 ├── research/                    ← 研究发现
 │   ├── initiator-guidance-2026-08-02.md ← 发起者路线说明整理
 │   ├── initiator-hermes-setup-2026-08-04.md ← Hermes 配置与学习 Prompt 更新
+│   ├── lifi-comprehensive-guide.md ← LI.FI 全面研究文档（产品矩阵/API/SDK/实测）
+│   ├── lifi-sdk-decision.md       ← LI.FI SDK 使用建议与决策记录
 │   ├── people-and-tools.md         ← 学习榜样、证据边界与工具地图
 │   ├── opportunities.md         ← 发现的机会结构
 │   ├── papers-and-reading.md    ← 阅读清单
@@ -58,6 +60,7 @@ icl-arbitrage-colearning/
 │   └── trades-log.md            ← 交易记录
 ├── tools/                       ← 工具配置
 │   ├── lifi-setup.md
+│   ├── lifi-quote-collector.py    ← LI.FI 只读报价/路由采集脚本
 │   └── hermes-setup.md
 └── outputs/                     ← 最终产出
     ├── knowledge-graph.md       ← 个人知识图谱
