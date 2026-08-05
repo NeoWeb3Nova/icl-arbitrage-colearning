@@ -58,6 +58,12 @@ icl-arbitrage-colearning/
 │   ├── hypotheses.md            ← 策略假设日志
 │   ├── simulator/               ← 回测/模拟代码
 │   └── trades-log.md            ← 交易记录
+├── lifi-demos/                  ← LI.FI 新手快速上手 demo（4 个）
+│   ├── README.md                  ← 新手快速教程（入口）
+│   ├── demo1-basic-api/           ← REST API 五大端点入门（Python）
+│   ├── demo2-quote-routes/        ← 报价与路由对比 + 费用拆解（Python）
+│   ├── demo3-lifi-sdk/            ← @lifi/sdk v4 路由生命周期（Node）
+│   └── demo4-lifi-widget/         ← Widget 快速嵌入（React）
 ├── tools/                       ← 工具配置
 │   ├── lifi-setup.md
 │   ├── lifi-quote-collector.py    ← LI.FI 只读报价/路由采集脚本

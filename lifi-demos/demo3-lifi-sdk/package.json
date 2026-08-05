@@ -1,0 +1,18 @@
+{
+  "name": "lifi-sdk-demo3",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Demo 3: @lifi/sdk v4 路由生命周期（getRoutes / getQuote / executeRoute 只读部分）",
+  "type": "module",
+  "scripts": {
+    "routes": "node src/get-routes.js",
+    "quote": "node src/get-quote.js",
+    "execute": "node src/execute-route.js"
+  },
+  "dependencies": {
+    "@lifi/sdk": "^4.3.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
