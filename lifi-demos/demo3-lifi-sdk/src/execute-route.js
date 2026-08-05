@@ -18,7 +18,10 @@ import { createClient, getQuote, executeRoute } from "@lifi/sdk";
 // 默认不执行！只打印"如果执行会怎么走"
 const DEMO_EXECUTE = false;
 
-const client = createClient({ integrator: "arbitrage-research" });
+const client = createClient({
+  integrator: "arbitrage-research",
+  apiKey: process.env.LIFI_API_KEY,
+});
 
 const DEMO_ADDRESS = "0x552008c0f6872d7aa9e46e4b5a8c4a8f8f8f8f8f";
 

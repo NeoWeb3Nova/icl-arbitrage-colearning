@@ -14,6 +14,7 @@ LI.FI 最小报价采集脚本（只读）
 
 import argparse
 import json
+import os
 import sys
 import time
 import urllib.parse
@@ -22,6 +23,10 @@ import urllib.request
 # LI.FI 常量
 BASE_URL = "https://li.quest/v1"
 USER_AGENT = "arbitrage-research/0.1 (co-learning data collector)"
+HEADERS = {
+    "User-Agent": USER_AGENT,
+    **({"x-lifi-api-key": os.environ["LIFI_API_KEY"]} if os.getenv("LIFI_API_KEY") else {}),
+}
 
 # 常用代币（避免每次查地址）
 TOKENS = {
@@ -38,7 +43,7 @@ TOOLS_ALLOWLIST = ["across", "stargateV2", "relaydepository", "celercircle", "1i
 def api_get(path: str, params: dict) -> dict:
     """GET LI.FI API 并返回 JSON。"""
     url = f"{BASE_URL}{path}?" + urllib.parse.urlencode(params)
-    req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
+    req = urllib.request.Request(url, headers=HEADERS)
     with urllib.request.urlopen(req, timeout=30) as resp:
         return json.loads(resp.read().decode("utf-8"))
 
@@ -108,7 +113,7 @@ def collect_routes(from_chain: int, to_chain: int,
     data = json.dumps(body).encode("utf-8")
     req = urllib.request.Request(
         url, data=data, method="POST",
-        headers={"User-Agent": USER_AGENT, "Content-Type": "application/json"},
+        headers={**HEADERS, "Content-Type": "application/json"},
     )
     with urllib.request.urlopen(req, timeout=30) as resp:
         result = json.loads(resp.read().decode("utf-8"))

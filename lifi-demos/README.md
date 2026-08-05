@@ -183,6 +183,7 @@ const widgetConfig = {
 ### 1. 需要 API Key 吗？
 - 演示/学习：**不需要**，无 Key 限流 200 请求 / 2 小时。
 - 生产环境：申请 Key（https://li.fi/），限流提升到 200 请求 / 分钟。
+- 服务端 Demo 会自动读取 `LIFI_API_KEY`；浏览器 Widget 不使用 Key，避免泄露。
 - ⚠️ **Key 只放环境变量，永远不要提交进仓库。**
 
 ### 2. 报价里的 `fromAddress` 填什么？

@@ -10,7 +10,10 @@
  */
 import { createClient, getQuote } from "@lifi/sdk";
 
-const client = createClient({ integrator: "arbitrage-research" });
+const client = createClient({
+  integrator: "arbitrage-research",
+  apiKey: process.env.LIFI_API_KEY,
+});
 
 const DEMO_ADDRESS = "0x552008c0f6872d7aa9e46e4b5a8c4a8f8f8f8f8f";
 

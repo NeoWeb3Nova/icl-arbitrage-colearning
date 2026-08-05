@@ -19,12 +19,17 @@ Demo 2: 报价与路由对比（Quote / Advanced Routes / 费用拆解）
 
 import argparse
 import json
+import os
 import time
 import urllib.parse
 import urllib.request
 
 BASE_URL = "https://li.quest/v1"
 USER_AGENT = "arbitrage-research-demo2/0.1"
+HEADERS = {
+    "User-Agent": USER_AGENT,
+    **({"x-lifi-api-key": os.environ["LIFI_API_KEY"]} if os.getenv("LIFI_API_KEY") else {}),
+}
 
 # 演示用地址：仅用于报价（fromAddress 是必填项），不会发生真实交易
 DEMO_ADDRESS = "0x552008c0f6872d7aa9e46e4b5a8c4a8f8f8f8f8f"
@@ -38,7 +43,7 @@ TOKENS = {
 
 def api_get(path: str, params: dict) -> dict:
     url = f"{BASE_URL}{path}?" + urllib.parse.urlencode(params)
-    req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
+    req = urllib.request.Request(url, headers=HEADERS)
     with urllib.request.urlopen(req, timeout=30) as resp:
         return json.loads(resp.read().decode("utf-8"))
 
@@ -47,7 +52,7 @@ def api_post(path: str, body: dict) -> dict:
     data = json.dumps(body).encode("utf-8")
     req = urllib.request.Request(
         f"{BASE_URL}{path}", data=data, method="POST",
-        headers={"User-Agent": USER_AGENT, "Content-Type": "application/json"},
+        headers={**HEADERS, "Content-Type": "application/json"},
     )
     with urllib.request.urlopen(req, timeout=30) as resp:
         return json.loads(resp.read().decode("utf-8"))

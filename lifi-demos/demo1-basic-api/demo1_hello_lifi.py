@@ -16,12 +16,17 @@ Demo 1: LI.FI REST API 五大端点入门（Hello, LI.FI!）
 
 import argparse
 import json
+import os
 import urllib.parse
 import urllib.request
 from collections import Counter
 
 BASE_URL = "https://li.quest/v1"
 USER_AGENT = "arbitrage-research-demo1/0.1"
+HEADERS = {
+    "User-Agent": USER_AGENT,
+    **({"x-lifi-api-key": os.environ["LIFI_API_KEY"]} if os.getenv("LIFI_API_KEY") else {}),
+}
 
 
 def api_get(path: str, params: dict | None = None) -> dict:
@@ -29,7 +34,7 @@ def api_get(path: str, params: dict | None = None) -> dict:
     url = f"{BASE_URL}{path}"
     if params:
         url += "?" + urllib.parse.urlencode(params)
-    req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
+    req = urllib.request.Request(url, headers=HEADERS)
     with urllib.request.urlopen(req, timeout=30) as resp:
         return json.loads(resp.read().decode("utf-8"))
 

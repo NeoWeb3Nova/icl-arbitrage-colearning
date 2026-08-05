@@ -13,7 +13,7 @@
 - OpenAPI Spec: https://docs.li.fi/openapi.yaml
 - API Base: https://li.quest/v1
 - Builders 开发者社区: https://t.me/lifibuilders
-- API Key: [待配置]（申请入口 https://li.fi/，无 Key 限流 200 req/2h）
+- API Key: 可选环境变量 `LIFI_API_KEY`（申请入口 https://li.fi/，无 Key 限流 200 req/2h）
 
 ## 全面研究文档
 
@@ -109,4 +109,4 @@ npm install @lifi/sdk-provider-ethereum
 - 无 API Key: 200 req / 2h；有 Key: 200 req / min
 - 429 → 指数退避重试
 - 非托管、多轮审计、$1M 漏洞赏金
-- **Key 只放环境变量，不进仓库**
+- **Key 只放 `LIFI_API_KEY` 环境变量，不进仓库**；服务端脚本会自动使用，浏览器 Widget 不注入 Key

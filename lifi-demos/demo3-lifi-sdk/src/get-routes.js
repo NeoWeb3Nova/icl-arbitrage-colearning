@@ -13,7 +13,10 @@
 import { createClient, getRoutes } from "@lifi/sdk";
 
 // integrator 是 LI.FI 平台规范要求的集成方标识，务必改成自己的名字
-const client = createClient({ integrator: "arbitrage-research" });
+const client = createClient({
+  integrator: "arbitrage-research",
+  apiKey: process.env.LIFI_API_KEY,
+});
 
 // 演示地址：仅用于报价（fromAddress 为必填项），不会发生真实交易
 const DEMO_ADDRESS = "0x552008c0f6872d7aa9e46e4b5a8c4a8f8f8f8f8f";
