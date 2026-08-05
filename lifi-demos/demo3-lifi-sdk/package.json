@@ -10,7 +10,8 @@
     "execute": "node src/execute-route.js"
   },
   "dependencies": {
-    "@lifi/sdk": "^4.3.0"
+    "@lifi/sdk": "^4.3.0",
+    "@lifi/sdk-provider-ethereum": "^4.0.8"
   },
   "engines": {
     "node": ">=18"
