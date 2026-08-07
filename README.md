@@ -25,7 +25,7 @@
 2. **第二周**：公开案例还原、数据脚本、Hermes 候选机会检查、回测与 Paper Trading。
 3. **第三周**：筛选 2–5 个符合个人能力圈的方向，深挖 Edge，留下验证脚本或明确否定证据。
 
-每日执行安排见 [21 天链上套利学习计划](./learning-plan.md)。完整方向整理见 [research/initiator-guidance-2026-08-02.md](./research/initiator-guidance-2026-08-02.md)；Hermes 配置更新见 [research/initiator-hermes-setup-2026-08-04.md](./research/initiator-hermes-setup-2026-08-04.md)；人物、学习样本与工具资料见 [research/people-and-tools.md](./research/people-and-tools.md)。现有 5 个模块继续保留，作为三周路线下的内部工作包。
+每日执行安排见 [21 天链上套利学习计划](./learning-plan.md)。完整方向整理见 [research/initiator-guidance-2026-08-02.md](./research/initiator-guidance-2026-08-02.md)；Hermes 配置更新见 [research/initiator-hermes-setup-2026-08-04.md](./research/initiator-hermes-setup-2026-08-04.md)；人物、学习样本与工具资料见 [research/people-and-tools.md](./research/people-and-tools.md)；共学群重要代码库分享见 [shares/](./shares/)。现有 5 个模块继续保留，作为三周路线下的内部工作包。
 
 ## 项目结构
 
@@ -54,6 +54,10 @@ icl-arbitrage-colearning/
 │   ├── opportunities.md         ← 发现的机会结构
 │   ├── papers-and-reading.md    ← 阅读清单
 │   └── signals/                 ← 信号观测记录
+├── shares/                      ← 共学群重要分享整理
+│   ├── README.md
+│   ├── gate-crossex.md
+│   └── mev-flashbot-sandwich-rs.md
 ├── strategies/                  ← 策略实验
 │   ├── hypotheses.md            ← 策略假设日志
 │   ├── simulator/               ← 回测/模拟代码
