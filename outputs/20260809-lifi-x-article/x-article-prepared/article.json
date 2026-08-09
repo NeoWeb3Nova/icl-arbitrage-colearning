@@ -1,0 +1,81 @@
+{
+  "title": "我先把一笔 LI.FI 报价拆开，再谈它能不能执行",
+  "cover_image": "shares/../outputs/20260809-lifi-x-article/00-article-cover-5x2.png",
+  "cover_exists": true,
+  "content_images": [
+    {
+      "path": "shares/../outputs/20260809-lifi-x-article/04-quote-evidence-table.png",
+      "original_path": "shares/../outputs/20260809-lifi-x-article/04-quote-evidence-table.png",
+      "exists": true,
+      "alt": "LI.FI Quote 证据字段对照表",
+      "block_index": 38,
+      "after_text": "【图片占位 IMG-04：Quote 证据字段对照表，请替换为 04-quote-evidence-table.png】"
+    },
+    {
+      "path": "shares/../outputs/20260809-lifi-x-article/02-quote-fields.png",
+      "original_path": "shares/../outputs/20260809-lifi-x-article/02-quote-fields.png",
+      "exists": true,
+      "alt": "读取 LI.FI Quote 字段",
+      "block_index": 40,
+      "after_text": "【图片占位 IMG-02：LI.FI Quote 字段，请替换为 02-quote-fields.png】"
+    },
+    {
+      "path": "shares/../outputs/20260809-lifi-x-article/01-quote-vs-routes.png",
+      "original_path": "shares/../outputs/20260809-lifi-x-article/01-quote-vs-routes.png",
+      "exists": true,
+      "alt": "Quote 与 Routes 的区别",
+      "block_index": 53,
+      "after_text": "【图片占位 IMG-01：Quote 与 Routes 的区别，请替换为 01-quote-vs-routes.png】"
+    },
+    {
+      "path": "shares/../outputs/20260809-lifi-x-article/03-read-only-boundary.png",
+      "original_path": "shares/../outputs/20260809-lifi-x-article/03-read-only-boundary.png",
+      "exists": true,
+      "alt": "LI.FI 只读查询与签名广播之间的边界",
+      "block_index": 72,
+      "after_text": "【图片占位 IMG-03：只读查询与签名广播边界，请替换为 03-read-only-boundary.png】"
+    }
+  ],
+  "dividers": [
+    {
+      "block_index": 2,
+      "after_text": "我没有签名，也没有广播。先把返回值拆开，看清楚它到底告诉了我什么：资产身份、金额单位、候选路径、到账数量、保护线、费用、耗时，以及失败后可能留下的风险。"
+    },
+    {
+      "block_index": 8,
+      "after_text": "对我来说，这些返回值只是执行前的证据，离“可以执行”还差几步。"
+    },
+    {
+      "block_index": 14,
+      "after_text": "静态发现数据可以缓存，动态报价不能当成长期有效的数据。"
+    },
+    {
+      "block_index": 26,
+      "after_text": "资产身份错了，后面的报价比较就没有意义。"
+    },
+    {
+      "block_index": 45,
+      "after_text": "它不能证明未来一定成交，更不能证明套利盈利。"
+    },
+    {
+      "block_index": 58,
+      "after_text": "只有放进统一的成本模型，这些路线数据才有比较价值。"
+    },
+    {
+      "block_index": 65,
+      "after_text": "中间的验证不能省略。"
+    },
+    {
+      "block_index": 74,
+      "after_text": "API 返回交易数据，不等于资金已经按预期到达。两者之间的边界要保留。"
+    },
+    {
+      "block_index": 84,
+      "after_text": "#Web3 #DeFi #LIFI #LearnInPublic"
+    }
+  ],
+  "html": "<p>链上套利共学 Day 5，我用程序只读地请求了一笔跨链报价。</p><p>我没有签名，也没有广播。先把返回值拆开，看清楚它到底告诉了我什么：资产身份、金额单位、候选路径、到账数量、保护线、费用、耗时，以及失败后可能留下的风险。</p><h2>我先确认 LI.FI 到底负责什么</h2><p>这次我把 LI.FI 当成路由和编排层，而不是策略引擎或收益保证器。它把跨链桥、DEX 和其他流动性方案放到统一接口后面，返回：</p><ul><li>支持的链和 Token 查询；</li>\n<li>单条 Quote；</li>\n<li>多条候选 Routes；</li>\n<li>费用和 Gas 拆解；</li>\n<li>可供后续签名的交易数据；</li>\n<li>交易提交后的状态查询。</li>\n</ul>\n剩下的判断不在 LI.FI 返回值里。我还得确认：<blockquote>这条路线是否满足资产约束？<br>扣除全部成本后是否仍然值得执行？<br>失败时是否会留下无法接受的单腿暴露？</blockquote><p>对我来说，这些返回值只是执行前的证据，离“可以执行”还差几步。</p><h2>我实际用到的读取链路</h2><p>当前 Agent Skill 里的调用链可以压缩成 5 步：</p><blockquote>1. /chains   确认执行环境<br>2. /tokens   确认 Token 地址和 decimals<br>3. /quote    获取一条当前报价<br>4. /advanced/routes   需要比较时获取多条候选路线<br>5. /status   交易提交后查询实际状态</blockquote><p>这 5 步不是每次都要全部调用。</p><p>`/chains`、`/tokens` 和 `/tools` 变化较慢，可以缓存；`/quote` 和 `/advanced/routes` 代表瞬时市场状态，不能长期复用旧结果；`/status` 只有拿到交易哈希或相关标识后才有意义。</p><p>静态发现数据可以缓存，动态报价不能当成长期有效的数据。</p><h2>先把金额和资产身份核对清楚</h2><p>本项目的 `demo2_quote_vs_routes.py` 和 `lifi-quote-collector.py` 都把人类可读金额转换成最小单位字符串。</p><p>这次实验输入是：</p><blockquote>0.1 ETH = 100000000000000000 wei</blockquote><p>最小单位转换逻辑可以理解为：`from_amount = 人类可读金额 × 10^decimals`，最后以字符串传给 API。</p><p>真正容易出错的地方不是换算公式，而是 `decimals` 和资产身份从哪里来：</p><ul><li>ETH 通常是 18 位；</li>\n<li>USDC 通常是 6 位；</li>\n<li>同名资产的不同链上表示也可能不是同一个 Token；</li>\n<li>`USDC` 与 `USDC.e` 不能只看符号判断为同一资产。</li>\n</ul>\n所以我不会只保存：<blockquote>symbol = USDC</blockquote><p>还要一起保存：</p><blockquote>chainId + token address + decimals</blockquote><p>资产身份错了，后面的报价比较就没有意义。</p><h2>一条 `/quote` 先看哪些字段</h2><p>我复用了项目里的脚本：</p><blockquote>python3 lifi-demos/demo2-quote-routes/demo2_quote_vs_routes.py --amount 0.1</blockquote><p>场景：</p><ul><li>源链：Ethereum，Chain ID `1`</li>\n<li>目标链：Arbitrum，Chain ID `42161`</li>\n<li>输入：`0.1 ETH`</li>\n<li>输出：Arbitrum USDC</li>\n<li>地址：公开占位地址，仅用于报价</li>\n</ul>\n本次 `/quote` 返回：<blockquote>tool:              layerswap<br>预计到账:           191.033756 USDC<br>toAmountMin:       186.257912 USDC<br>预计耗时:           11 秒</blockquote><p>费用拆解中还出现了：</p><blockquote>LI.FI Fixed Fee      ≈ $0.4791<br>LayerSwap Fee       ≈ $0.0384<br>gas(SEND)            ≈ $0.0624</blockquote><p>如果只看 `toAmount`，结论会偏乐观。</p><p>我把字段分成四组：</p><p>【图片占位 IMG-04：Quote 证据字段对照表，请替换为 04-quote-evidence-table.png】</p><p>这张表先把报价拆成资产、结果、成本和时效四类证据。</p><p>【图片占位 IMG-02：LI.FI Quote 字段，请替换为 02-quote-fields.png】</p><p>`toAmountMin` 很容易被误读。</p><p>它是滑点保护下限，不是“实际一定会收到的数量”；`executionDuration` 是预计耗时，也不是完成证明。</p><p>这份报价只说明：</p><blockquote>在请求时刻、给定金额、给定链和给定资产身份下，API 计算出了一个结果。</blockquote><p>它不能证明未来一定成交，更不能证明套利盈利。</p><h2>要比较路线，再调用 `/advanced/routes`</h2><p>`/quote` 和 `/advanced/routes` 解决的是两个不同问题：</p><blockquote>/quote：给我一条当前可分析的最优报价<br>/advanced/routes：把候选路线列出来让我比较</blockquote><p>本项目的 Routes 请求使用地址字段和链 ID：</p><blockquote>{<br>  \"fromChainId\": 1,<br>  \"toChainId\": 42161,<br>  \"fromTokenAddress\": \"0x0000000000000000000000000000000000000000\",<br>  \"toTokenAddress\": \"0xaf88d065e77c8cC2239327C5EDb3A432268e5831\",<br>  \"fromAmount\": \"100000000000000000\",<br>  \"fromAddress\": \"0xYourAddress\"<br>}</blockquote><p>这次请求返回了 5 条候选路线：</p><blockquote>最高到账：191.130771 USDC<br>最低到账：190.038224 USDC<br>路线差异：约 1.092547 USDC</blockquote><p>【图片占位 IMG-01：Quote 与 Routes 的区别，请替换为 01-quote-vs-routes.png】</p><p>这 `1.092547 USDC` 只是这次观察里不同路径的到账差异，不能直接当成利润。还缺少：</p><ul><li>目标市场的真实可成交价格和深度；</li>\n<li>到账后卖出或对冲的成本；</li>\n<li>延迟、失败和资金再平衡成本。</li>\n</ul>\n我不会直接选最高的数字，而是把每条路线整理成相同字段：<blockquote>route<br>fromAmount<br>estimatedToAmount<br>toAmountMin<br>feeCosts<br>gasCosts<br>executionDuration<br>steps<br>tool</blockquote><p>只有放进统一的成本模型，这些路线数据才有比较价值。</p><h2>我的执行前检查清单</h2><p>在决定是否继续之前，我会检查 8 件事：</p><blockquote>1. 链 ID 是否正确？<br>2. Token 地址是否正确？<br>3. decimals 和最小单位金额是否正确？<br>4. toAmount 与 toAmountMin 的差距是否可接受？<br>5. feeCosts 和 gasCosts 是否完整？<br>6. executionDuration 是否引入明显延迟风险？<br>7. 目标市场是否存在真实可成交的退出路径？<br>8. 失败时是否有库存、对冲或再平衡方案？</blockquote><p>有一项答不上来，我就不会把它标成“可执行套利”。</p><p>我会把它留在这个状态链上：</p><blockquote>报价观察<br>→ 待补充成本<br>→ 待验证流动性<br>→ 可执行候选<br>→ 模拟成交<br>→ 真实成交</blockquote><p>中间的验证不能省略。</p><h2>这套流程现在能做什么</h2><p>当前项目只做只读研究：</p><ul><li>查询支持的链、Token 和工具；</li>\n<li>请求 Quote；</li>\n<li>比较 Routes；</li>\n<li>提取费用、Gas、耗时和最低到账；</li>\n<li>把报价放入 Paper Trading 或净收益模型；</li>\n<li>在已有交易哈希后查询 `/status`。</li>\n</ul>\n暂时不做这些事：<ul><li>自动读取或保存私钥；</li>\n<li>自动扩大 Token 授权；</li>\n<li>自动签名；</li>\n<li>自动广播；</li>\n<li>把 `transactionRequest` 当作已成交交易；</li>\n<li>用多个 Key 或多个 IP 绕过限流。</li>\n</ul>\n授权流程也不能偷懒：如果是 ERC-20，spender 要读取报价返回的 `estimate.approvalAddress`，不能硬编码。授权确认后还要重新报价，因为旧报价和 Gas 估算可能已经过期。<p>【图片占位 IMG-03：只读查询与签名广播边界，请替换为 03-read-only-boundary.png】</p><p>跨链执行还要处理状态差异：`PENDING` 不等于失败，`DONE` 还要继续看 `COMPLETED`、`PARTIAL` 或 `REFUNDED`，`FAILED` 则要根据失败原因决定是否停止。</p><p>API 返回交易数据，不等于资金已经按预期到达。两者之间的边界要保留。</p><h2>这次我真正拿到的结果</h2><p>我拿到的是一组可以重复请求的只读证据：</p><ul><li>`/quote` 返回 1 条当前报价；</li>\n<li>`/advanced/routes` 返回 5 条候选路线；</li>\n<li>0.1 ETH 的候选路线到账差约 1.092547 USDC；</li>\n<li>报价里包含最低到账、费用和预计耗时；</li>\n<li>本地脚本能够重复请求并输出标准化字段。</li>\n</ul>\n同样没验证的有：<ul><li>没有证明存在套利利润；</li>\n<li>没有验证目标市场的真实成交深度；</li>\n<li>没有验证跨链完成状态；</li>\n<li>没有签名或广播交易；</li>\n<li>没有产生真实交易结果。</li>\n</ul>\n所以，LI.FI 接入 Agent 的第一阶段，对我来说更像：<blockquote>执行前证据采集。</blockquote><p>先把证据补齐，比让 Agent 更快点击执行重要。证据不足时，正确的输出就是：</p><blockquote>这只是报价观察，暂时不能执行。</blockquote><p>#Web3 #DeFi #LIFI #LearnInPublic</p><h2>本文使用的本项目资料</h2><ul><li>`lifi-demos/demo2-quote-routes/demo2_quote_vs_routes.py`</li>\n<li>`tools/lifi-quote-collector.py`</li>\n<li>`daily/2026-08-09.md` 的 Day 5 真实只读报价记录</li>\n<li>Hermes LI.FI Agent Skill 的接口、字段、状态和安全边界</li>\n</ul>\n证据性质：一次真实只读报价观察与本地脚本复现，不构成长期价格、可复制收益或真实盈利证明。",
+  "total_blocks": 87,
+  "source_file": "/home/neo/projects/icl-arbitrage-colearning/shares/lifi-minimal-practice-x-article-2026-08-09.md",
+  "missing_images": 0
+}
