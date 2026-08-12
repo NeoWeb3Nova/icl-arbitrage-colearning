@@ -1,45 +1,99 @@
-/**
- * Demo 4: @lifi/widget v4 快速嵌入
- * ================================
- * 零代码嵌入一个完整的换币 / 跨链桥接 UI。
- *
- * 运行：
- *   npm install
- *   npm run dev          # 打开 http://localhost:5173
- *
- * config 里可以预设：
- *   - integrator:  你的集成方标识（LI.FI 平台规范，务必改成自己的）
- *   - fromChain / toChain: 默认源/目标链
- *   - fromToken / toToken: 默认代币
- *   - theme: 主题色
- */
-import { StrictMode } from "react";
+import { LiFiWidgetLight } from "@lifi/widget-light";
+import { useEthereumIframeHandler } from "@lifi/widget-light/ethereum";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { StrictMode, useMemo } from "react";
 import { createRoot } from "react-dom/client";
-import { LiFiWidget } from "@lifi/widget";
+import { createClient, http } from "viem";
+import { arbitrum, base, mainnet, optimism, polygon } from "viem/chains";
+import { createConfig, useConnect, useConnection, useDisconnect, WagmiProvider } from "wagmi";
+import { injected } from "wagmi/connectors";
+import "./styles.css";
 
 const widgetConfig = {
   integrator: "arbitrage-research",
-  fromChain: 1, // Ethereum
-  toChain: 42161, // Arbitrum
-  fromToken: "0x0000000000000000000000000000000000000000", // ETH
-  toToken: "0xaf88d065e77c8cC2239327C5EDb3A432268e5831", // USDC (Arbitrum)
+  variant: "compact",
+  appearance: "light",
+  fromChain: 1,
+  toChain: 42161,
+  fromToken: "0x0000000000000000000000000000000000000000",
+  toToken: "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+  routePriority: "RECOMMENDED",
+  slippage: 0.005,
+  buildUrl: true,
+  languages: { default: "zh", allow: ["zh", "en"] },
+  chains: { allow: [1, 10, 137, 8453, 42161] },
   theme: {
-    palette: {
-      primary: { main: "#5C86FF" },
-      secondary: { main: "#5C86FF" },
-    },
-    shape: { borderRadius: 12, borderRadiusSecondary: 8 },
+    container: { border: "1px solid #dfe3f0", borderRadius: "16px" },
+  },
+  sdkConfig: {
+    apiUrl: `${window.location.origin}/api/lifi`,
+    routeOptions: { maxPriceImpact: 0.1, allowSwitchChain: true },
   },
 };
 
+const wagmiConfig = createConfig({
+  chains: [mainnet, arbitrum, base, optimism, polygon],
+  connectors: [injected()],
+  client: ({ chain }) => createClient({ chain, transport: http() }),
+  multiInjectedProviderDiscovery: true,
+  ssr: false,
+});
+
+const queryClient = new QueryClient();
+
+function shortAddress(address) {
+  return address ? `${address.slice(0, 6)}…${address.slice(-4)}` : "";
+}
+
+function App() {
+  const ethereumHandler = useEthereumIframeHandler();
+  const handlers = useMemo(() => [ethereumHandler], [ethereumHandler]);
+  const { address, chain, isConnected } = useConnection();
+  const { mutate: connect, isPending } = useConnect();
+  const { mutate: disconnect } = useDisconnect();
+
+  return (
+    <main>
+      <header>
+        <div>
+          <p className="eyebrow">ARBITRAGE CO-LEARNING</p>
+          <h1>LI.FI 实时换币与跨链</h1>
+          <p className="subtitle">查看实时路径，并通过自己的钱包逐笔确认交易。</p>
+        </div>
+        <button
+          className="wallet-button"
+          type="button"
+          onClick={() => isConnected ? disconnect({}) : connect({ connector: injected() })}
+          disabled={isPending}
+        >
+          {isPending ? "连接中…" : isConnected ? `${shortAddress(address)} · 断开` : "连接钱包"}
+        </button>
+      </header>
+
+      <section className="content" aria-label="LI.FI 交易界面">
+        <div className="notice" role="note">
+          <strong>执行边界</strong>
+          <span>报价会过期；请核对链、资产、最低到账、Gas 与路径。本站不托管密钥，也不会自动签名。</span>
+          {chain && <span className="network">当前钱包：{chain.name}</span>}
+        </div>
+        <LiFiWidgetLight
+          config={widgetConfig}
+          handlers={handlers}
+          autoResize
+          className="widget"
+          title="LI.FI 换币与跨链 Widget"
+        />
+      </section>
+    </main>
+  );
+}
+
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <div style={{ maxWidth: 480, margin: "0 auto", padding: 24 }}>
-      <h2>⚡ LI.FI Widget 快速 Demo</h2>
-      <p style={{ color: "#666", fontSize: 14 }}>
-        同一界面支持同链 Swap 与跨链桥接，聚合 69 条链、35 个桥、35 个 DEX。
-      </p>
-      <LiFiWidget config={widgetConfig} />
-    </div>
+    <QueryClientProvider client={queryClient}>
+      <WagmiProvider config={wagmiConfig}>
+        <App />
+      </WagmiProvider>
+    </QueryClientProvider>
   </StrictMode>
 );

@@ -27,6 +27,8 @@
 
 每日执行安排见 [21 天链上套利学习计划](./learning-plan.md)。完整方向整理见 [research/initiator-guidance-2026-08-02.md](./research/initiator-guidance-2026-08-02.md)；Hermes 配置更新见 [research/initiator-hermes-setup-2026-08-04.md](./research/initiator-hermes-setup-2026-08-04.md)；人物、学习样本与工具资料见 [research/people-and-tools.md](./research/people-and-tools.md)；共学群重要代码库分享见 [shares/](./shares/)。现有 5 个模块继续保留，作为三周路线下的内部工作包。
 
+在线工具：[LI.FI 实时换币与跨链 Widget](https://icl-arbitrage-lifi-widget.vercel.app)（EVM；所有交易均由用户钱包手动确认）。
+
 ## 项目结构
 
 ```
