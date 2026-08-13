@@ -54,30 +54,27 @@ def fetch_venue(venue, exchange_id, settle, attempts=3):
     exchange = getattr(ccxt, exchange_id)(config)
     symbols = [f"{asset}/{settle}:{settle}" for asset in ASSETS]
     try:
-        for attempt in range(attempts):
-            try:
-                rates = exchange.fetch_funding_rates(symbols)
-                break
-            except (ccxt.NetworkError, ccxt.RequestTimeout):
-                if attempt == attempts - 1:
-                    raise
-                time.sleep(attempt + 1)
+        symbol_errors = {}
+        try:
+            rates = retry_network(lambda: exchange.fetch_funding_rates(symbols), attempts)
+        except ccxt.BadSymbol:
+            rates = {}
+            for symbol in symbols:
+                try:
+                    rates[symbol] = retry_network(lambda symbol=symbol: exchange.fetch_funding_rate(symbol), attempts)
+                except Exception as exc:
+                    symbol_errors[symbol] = exc
 
         binance_intervals = {}
         if venue == "Binance":
-            for attempt in range(attempts):
-                try:
-                    rows = exchange.fapiPublicGetFundingInfo()
-                    break
-                except (ccxt.NetworkError, ccxt.RequestTimeout):
-                    if attempt == attempts - 1:
-                        raise
-                    time.sleep(attempt + 1)
+            rows = retry_network(exchange.fapiPublicGetFundingInfo, attempts)
             binance_intervals = {row["symbol"]: row["fundingIntervalHours"] for row in rows}
 
         results = []
         for asset, symbol in zip(ASSETS, symbols):
             try:
+                if symbol in symbol_errors:
+                    raise symbol_errors[symbol]
                 rate = rates[symbol]
                 raw_rate = Decimal(str(rate["fundingRate"]))
                 hours = interval_hours(venue, rate, binance_intervals)
@@ -102,6 +99,16 @@ def fetch_venue(venue, exchange_id, settle, attempts=3):
         return [error_row(asset, venue, symbol, exc) for asset, symbol in zip(ASSETS, symbols)]
     finally:
         exchange.close()
+
+
+def retry_network(call, attempts):
+    for attempt in range(attempts):
+        try:
+            return call()
+        except (ccxt.NetworkError, ccxt.RequestTimeout):
+            if attempt == attempts - 1:
+                raise
+            time.sleep(attempt + 1)
 
 
 def error_row(asset, venue, symbol, exc):
@@ -131,6 +138,10 @@ def rank_all(results):
     return rankings, winners
 
 
+def ranking_marker(ranked):
+    return "🏆" if len(ranked) == len(VENUES) else f"⚠ 部分排名 {len(ranked)}/{len(VENUES)}"
+
+
 def self_test():
     rows = [
         {"asset": "BTC", "venue": "A", "status": "ok", "hourly_rate": "0.00001"},
@@ -142,6 +153,8 @@ def self_test():
     assert [row["venue"] for row in ranked] == ["A", "C", "B"]
     assert winners == ["A", "C"]
     assert rank_asset([rows[0], rows[3]])[1] == []
+    assert ranking_marker(ranked) == "⚠ 部分排名 3/4"
+    assert ranking_marker(ranked + [{"venue": "D"}]) == "🏆"
     assert interval_hours(
         "OKX",
         {"info": {"prevFundingTime": "0", "fundingTime": "28800000", "nextFundingTime": "57600000"}},
@@ -169,7 +182,7 @@ def print_report(results, rankings, winners):
         cashflow = hourly * Decimal(10_000)
         direction = "空头收" if hourly >= 0 else "多头收"
         venue_rates = "  ".join(f"{row['venue']} {Decimal(row['hourly_rate']):.6%}" for row in ranked)
-        print(f"{index:>2}. {asset:<5} 🏆 {','.join(winners[asset])} {hourly:.6%}/h｜$10k {direction} ${abs(cashflow):.3f}/h")
+        print(f"{index:>2}. {asset:<5} {ranking_marker(ranked)} {','.join(winners[asset])} {hourly:.6%}/h｜$10k {direction} ${abs(cashflow):.3f}/h")
         print(f"    {venue_rates}")
 
     failures = [row for row in results if row["status"] == "error"]
@@ -198,7 +211,13 @@ def main():
 
     if args.jsonl:
         args.jsonl.parent.mkdir(parents=True, exist_ok=True)
-        record = {"collected_at": iso_time(), "assets": list(ASSETS), "winners": winners, "results": results}
+        record = {
+            "collected_at": iso_time(),
+            "assets": list(ASSETS),
+            "coverage": {asset: len(rankings[asset]) for asset in ASSETS},
+            "winners": winners,
+            "results": results,
+        }
         with args.jsonl.open("a", encoding="utf-8") as handle:
             handle.write(json.dumps(record, ensure_ascii=False, separators=(",", ":")) + "\n")
 
