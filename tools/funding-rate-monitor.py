@@ -67,8 +67,11 @@ def fetch_venue(venue, exchange_id, settle, attempts=3):
 
         binance_intervals = {}
         if venue == "Binance":
-            rows = retry_network(exchange.fapiPublicGetFundingInfo, attempts)
-            binance_intervals = {row["symbol"]: row["fundingIntervalHours"] for row in rows}
+            try:
+                rows = retry_network(exchange.fapiPublicGetFundingInfo, attempts)
+                binance_intervals = {row["symbol"]: row["fundingIntervalHours"] for row in rows}
+            except (ccxt.NetworkError, ccxt.RequestTimeout):
+                pass
 
         results = []
         for asset, symbol in zip(ASSETS, symbols):
@@ -155,6 +158,7 @@ def self_test():
     assert rank_asset([rows[0], rows[3]])[1] == []
     assert ranking_marker(ranked) == "⚠ 部分排名 3/4"
     assert ranking_marker(ranked + [{"venue": "D"}]) == "🏆"
+    assert interval_hours("Binance", {"info": {"symbol": "BTCUSDT"}}, {}) == 8
     assert interval_hours(
         "OKX",
         {"info": {"prevFundingTime": "0", "fundingTime": "28800000", "nextFundingTime": "57600000"}},
