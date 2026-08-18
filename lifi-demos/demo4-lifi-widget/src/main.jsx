@@ -48,6 +48,19 @@ const monitoringPlatforms = [
   { name: "CoinBeacon", description: "简洁排行榜（最高/最低费率），归一化到 8 小时，支持警报。", url: "https://coinbeacon.io/funding-rates", image: "https://www.google.com/s2/favicons?domain=coinbeacon.io&sz=128", features: ["最高/最低费率", "8 小时归一化", "警报"] },
 ];
 
+const diagnosisSnapshot = {
+  route: "Arbitrum ETH → USDC → ETH",
+  capital: "0.01 ETH",
+  capitalUsd: "$19.04",
+  theoreticalReturn: "0.009964721 ETH",
+  theoreticalRoi: "-0.353%",
+  conservativeReturn: "0.009865324 ETH",
+  conservativeRoi: "-1.347%",
+  quoteAge: "未记录",
+  duration: "0s（快照）",
+  evidence: "/evidence/20260818-lifi-paper-trade.json",
+};
+
 function shortAddress(address) {
   return address ? `${address.slice(0, 6)}…${address.slice(-4)}` : "";
 }
@@ -119,6 +132,81 @@ function WorkflowCanvas({ selectedId, onSelect }) {
         ))}
       </div>
     </div>
+  );
+}
+
+function DiagnosisView() {
+  const funnel = [
+    ["报价快照", "1", "已记录"],
+    ["理论往返", "1", diagnosisSnapshot.theoreticalRoi],
+    ["保守往返", "1", diagnosisSnapshot.conservativeRoi],
+    ["可执行机会", "0", "未通过"],
+  ];
+  const legs = [
+    { label: "LEG 1", title: "ETH → USDC", input: "0.01 ETH", output: "19.014502 USDC", minimum: "18.919429 USDC", cost: "$0.0777" },
+    { label: "LEG 2 · CONSERVATIVE", title: "USDC → ETH", input: "18.919429 USDC", output: "0.009865324 ETH", minimum: "0.009865324 ETH", cost: "$0.0702" },
+  ];
+
+  return (
+    <section className="diagnosis-view" aria-label="跨链套利诊断终端">
+      <div className="diagnosis-hero">
+        <div>
+          <p className="section-kicker">CROSS-CHAIN OPPORTUNITY & EXECUTION RESEARCH</p>
+          <h2>套利诊断终端</h2>
+          <p>发现价差，拆解成本，验证这笔套利是否真的存在。</p>
+        </div>
+        <div className="snapshot-badge"><span className="live-dot" />只读案例快照</div>
+      </div>
+
+      <div className="diagnosis-summary">
+        <div>
+          <p className="section-kicker">CURRENT CASE</p>
+          <h3>{diagnosisSnapshot.route}</h3>
+          <p>Paper Trading · Arbitrum One · 无签名、无广播</p>
+        </div>
+        <div className="verdict verdict-rejected"><span>✕</span><strong>NOT EXECUTION ROBUST</strong><small>保守结果为负，不执行</small></div>
+      </div>
+
+      <div className="metric-grid" aria-label="套利诊断核心指标">
+        <div className="metric-card"><span>投入资本</span><strong>{diagnosisSnapshot.capital}</strong><small>{diagnosisSnapshot.capitalUsd}</small></div>
+        <div className="metric-card"><span>理论 ROI</span><strong className="negative">{diagnosisSnapshot.theoreticalRoi}</strong><small>Return {diagnosisSnapshot.theoreticalReturn}</small></div>
+        <div className="metric-card"><span>保守 ROI</span><strong className="negative">{diagnosisSnapshot.conservativeRoi}</strong><small>toAmountMin 路径</small></div>
+        <div className="metric-card"><span>Quote Age</span><strong>{diagnosisSnapshot.quoteAge}</strong><small>证据未记录新鲜度</small></div>
+        <div className="metric-card"><span>Route Duration</span><strong>{diagnosisSnapshot.duration}</strong><small>provider snapshot</small></div>
+      </div>
+
+      <div className="diagnosis-columns">
+        <section className="diagnosis-panel" aria-labelledby="opportunity-title">
+          <div className="panel-heading"><div><p className="section-kicker">OPPORTUNITIES</p><h3 id="opportunity-title">机会表</h3></div><span className="table-note">Quote ≠ Fill</span></div>
+          <div className="opportunity-table-wrap">
+            <table className="opportunity-table">
+              <thead><tr><th>Route</th><th>Capital</th><th>Expected</th><th>Worst-case</th><th>Status</th></tr></thead>
+              <tbody><tr><td>{diagnosisSnapshot.route}</td><td>{diagnosisSnapshot.capital}</td><td className="negative">{diagnosisSnapshot.theoreticalRoi}</td><td className="negative">{diagnosisSnapshot.conservativeRoi}</td><td><span className="table-status">REJECTED</span></td></tr></tbody>
+            </table>
+          </div>
+          <div className="evidence-row"><span>证据：{diagnosisSnapshot.evidence}</span><span>状态：无真实交易</span></div>
+        </section>
+
+        <section className="diagnosis-panel" aria-labelledby="funnel-title">
+          <div className="panel-heading"><div><p className="section-kicker">DIAGNOSIS FUNNEL</p><h3 id="funnel-title">机会死在哪一步</h3></div></div>
+          <div className="funnel-list">{funnel.map(([label, count, note], index) => <div className="funnel-row" key={label}><span className="funnel-index">0{index + 1}</span><strong>{label}</strong><b>{count}</b><small>{note}</small></div>)}</div>
+        </section>
+      </div>
+
+      <div className="diagnosis-columns">
+        <section className="diagnosis-panel" aria-labelledby="reasons-title">
+          <div className="panel-heading"><div><p className="section-kicker">REJECTION REASONS</p><h3 id="reasons-title">为什么没有套利</h3></div></div>
+          <ul className="reason-list"><li><span className="reason-icon">01</span><div><strong>理论往返已经为负</strong><small>最终返回 0.009964721 ETH，低于起始 0.01 ETH。</small></div></li><li><span className="reason-icon">02</span><div><strong>滑点保护后进一步恶化</strong><small>使用第一腿 toAmountMin 重报价，保守 ROI 降至 {diagnosisSnapshot.conservativeRoi}。</small></div></li><li><span className="reason-icon">03</span><div><strong>时效性证据不足</strong><small>当前快照没有 Quote Age 与机会持续时间，不能宣称可执行。</small></div></li></ul>
+        </section>
+
+        <section className="diagnosis-panel" aria-labelledby="route-detail-title">
+          <div className="panel-heading"><div><p className="section-kicker">ROUTE DETAIL</p><h3 id="route-detail-title">两腿成本与连续性</h3></div></div>
+          <div className="leg-list">{legs.map((leg) => <div className="leg-card" key={leg.label}><div className="leg-heading"><span>{leg.label}</span><strong>{leg.title}</strong></div><dl><div><dt>Input</dt><dd>{leg.input}</dd></div><div><dt>toAmount</dt><dd>{leg.output}</dd></div><div><dt>toAmountMin</dt><dd>{leg.minimum}</dd></div><div><dt>费用 + Gas</dt><dd>{leg.cost}</dd></div></dl></div>)}</div>
+        </section>
+      </div>
+
+      <p className="diagnosis-footnote">本页只展示已归档的报价模拟。后续接入实时扫描前，仍需补齐 Quote Age、executionDuration、历史 persistence 与 capacity curve。</p>
+    </section>
   );
 }
 
@@ -224,7 +312,7 @@ function MonitoringPlatformsView() {
 }
 
 function App() {
-  const [view, setView] = useState("experiment");
+  const [view, setView] = useState("diagnosis");
   const { address, chain, isConnected } = useConnection();
   const { mutate: connect, isPending } = useConnect();
   const { mutate: disconnect } = useDisconnect();
@@ -237,18 +325,21 @@ function App() {
           <h1>从价差观察，到可验证结论。</h1>
           <p className="subtitle">用工作流拆开每一次套利实验：背景、报价、成本、风险与否定条件。</p>
         </div>
-        {view === "experiment" && (
-          <span className="read-only-badge">只读实验 · 不自动交易</span>
+        {(view === "diagnosis" || view === "experiment") && (
+          <span className="read-only-badge">只读研究 · 不自动交易</span>
         )}
       </header>
 
       <nav className="view-nav" aria-label="网站主要区域">
+        <button type="button" className={view === "diagnosis" ? "is-active" : ""} aria-current={view === "diagnosis" ? "page" : undefined} onClick={() => setView("diagnosis")}>诊断终端</button>
         <button type="button" className={view === "experiment" ? "is-active" : ""} aria-current={view === "experiment" ? "page" : undefined} onClick={() => setView("experiment")}>实验工作流</button>
         <button type="button" className={view === "tools" ? "is-active" : ""} aria-current={view === "tools" ? "page" : undefined} onClick={() => setView("tools")}>LI.FI 工具</button>
         <button type="button" className={view === "monitoring" ? "is-active" : ""} aria-current={view === "monitoring" ? "page" : undefined} onClick={() => setView("monitoring")}>套利监控平台</button>
       </nav>
 
-      {view === "experiment" ? (
+      {view === "diagnosis" ? (
+        <DiagnosisView />
+      ) : view === "experiment" ? (
         <ExperimentView />
       ) : view === "tools" ? (
         <ToolsView chain={chain} isConnected={isConnected} address={address} connect={connect} disconnect={disconnect} isPending={isPending} />
