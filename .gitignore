@@ -9,4 +9,7 @@ Thumbs.db
 .venv/
 __pycache__/
 *.pyc
+*:Zone.Identifier
 outputs/funding-rates*.jsonl
+.vercel
+.env*

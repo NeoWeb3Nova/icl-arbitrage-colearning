@@ -3,6 +3,7 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "rewrites": [
-    { "source": "/api/lifi/:path*", "destination": "/api/proxy?path=:path*" }
+    { "source": "/api/lifi/:path*", "destination": "/api/proxy?path=:path*" },
+    { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
