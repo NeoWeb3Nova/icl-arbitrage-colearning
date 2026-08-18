@@ -40,12 +40,47 @@ const wagmiConfig = createConfig({
 
 const queryClient = new QueryClient();
 
+const monitoringCategories = [
+  { id: "scanners", label: "机会扫描器", note: "发现候选机会，再交给诊断终端核验" },
+  { id: "funding", label: "资金费率与基差", note: "适合永续合约、期现与跨交易所观察" },
+  { id: "routes", label: "跨链路由与聚合器", note: "对比路径、费用、耗时与到手金额" },
+  { id: "onchain", label: "DEX、MEV 与市场数据", note: "拆解链上路径、流动性与市场结构" },
+  { id: "automation", label: "自动化与执行研究", note: "执行层参考，不代表本站自动交易" },
+  { id: "learning", label: "学习与研究资源", note: "建立套利判断所需的基础知识" },
+];
+
 const monitoringPlatforms = [
-  { name: "Loris Tools", handle: "@LorisTools", description: "专门做加密货币永续合约资金费率套利扫描器，实时数据覆盖广、可灵活筛选。", url: "https://loris.tools", image: "https://www.google.com/s2/favicons?domain=loris.tools&sz=128", features: ["实时数据", "灵活筛选", "资金费率套利"] },
-  { name: "CoinGlass", handle: "@coinglass_com", description: "比较常用，中文友好，基础功能免费。", url: "https://coinglass.com/zh/FundingRate", image: "https://www.google.com/s2/favicons?domain=coinglass.com&sz=128", features: ["中文界面", "基础免费", "资金费率"] },
-  { name: "Sharpe", description: "无需注册，支持 33 家交易所、年化 APR 归一化、币种×交易所热力图和单币跨所对比。", url: "https://sharpe.ai/funding-rates", image: "https://www.google.com/s2/favicons?domain=sharpe.ai&sz=128", features: ["无需注册", "33 家交易所", "APR 归一化"] },
-  { name: "PerpFinder", handle: "@PerpFinderCom", description: "实时监控套利价差与热力图，同时显示持仓量。", url: "https://perpfinder.com/tools/funding-rates", image: "https://www.google.com/s2/favicons?domain=perpfinder.com&sz=128", features: ["实时监控", "套利价差", "持仓量"] },
-  { name: "CoinBeacon", description: "简洁排行榜（最高/最低费率），归一化到 8 小时，支持警报。", url: "https://coinbeacon.io/funding-rates", image: "https://www.google.com/s2/favicons?domain=coinbeacon.io&sz=128", features: ["最高/最低费率", "8 小时归一化", "警报"] },
+  { category: "scanners", name: "P2P.Army", description: "综合 CEX、DEX/CEX、Funding、Spot/Futures 与三角套利扫描，强调净利润、深度和历史 Spread。", url: "https://p2p.army/en", features: ["净利润", "Order Book", "多类套利"] },
+  { category: "scanners", name: "ArbitrageScanner", description: "覆盖 CEX↔DEX、DEX↔DEX 与跨链机会，提供多链扫描和过滤器。", url: "https://arbitragescanner.io/ar/about-dex-scanner", features: ["500+ DEX", "90+ 链", "机会过滤"] },
+  { category: "scanners", name: "Yieldo", description: "免费实时扫描器，侧重交易所价差、净利润视角和提现路由状态。", url: "https://yieldo.me/arbitrage", features: ["免费", "净利润", "提现状态"] },
+  { category: "scanners", name: "VoltArb", description: "净利润导向的扫描器，结合真实费用、滑点、提现后利润和 Funding 组合。", url: "https://voltarb.com", features: ["费用后利润", "滑点", "Funding"] },
+  { category: "scanners", name: "SpreadScan", description: "覆盖 CEX-CEX、P2P 与三角套利，关注费用和提现状态。", url: "https://spreadscan.com", features: ["CEX-CEX", "P2P", "三角套利"] },
+  { category: "scanners", name: "Arbitron", description: "信号与回测导向，适合观察历史周期利润估算和机会置信度。", url: "https://arbitron.app", features: ["回测", "历史周期", "置信度"] },
+  { category: "funding", name: "Loris Tools", handle: "@LorisTools", description: "专门做加密货币永续合约资金费率套利扫描器，实时数据覆盖广、可灵活筛选。", url: "https://loris.tools", features: ["实时数据", "灵活筛选", "资金费率套利"] },
+  { category: "funding", name: "CoinGlass", handle: "@coinglass_com", description: "常用的资金费率与市场数据工具，中文友好，基础功能免费。", url: "https://coinglass.com/zh/FundingRate", features: ["中文界面", "基础免费", "资金费率"] },
+  { category: "funding", name: "Sharpe", description: "无需注册，支持 33 家交易所、年化 APR 归一化、币种×交易所热力图和单币跨所对比。", url: "https://sharpe.ai/funding-rates", features: ["无需注册", "33 家交易所", "APR 归一化"] },
+  { category: "funding", name: "PerpFinder", handle: "@PerpFinderCom", description: "实时监控套利价差与热力图，同时显示持仓量。", url: "https://perpfinder.com/tools/funding-rates", features: ["实时监控", "套利价差", "持仓量"] },
+  { category: "funding", name: "CoinBeacon", description: "简洁排行榜（最高/最低费率），归一化到 8 小时，支持警报。", url: "https://coinbeacon.io/funding-rates", features: ["最高/最低费率", "8 小时归一化", "警报"] },
+  { category: "funding", name: "Velo Data", description: "机构级市场数据看板，适合观察跨交易所基差、隐含波动率与资金费率异动。", url: "https://velodata.app", features: ["基差", "隐含波动率", "资金费率"] },
+  { category: "routes", name: "LI.FI", description: "跨链路由聚合器；Route Estimate 可用于对比到手金额、费用、Gas 与执行时长。", url: "https://li.fi", features: ["Route", "费用拆解", "执行时长"] },
+  { category: "routes", name: "LlamaSwap", description: "Aggregator of Aggregators，同时询价多个聚合器并比较更优执行结果。", url: "https://swap.defillama.com", features: ["聚合器的聚合器", "路线对比", "到手金额"] },
+  { category: "routes", name: "Jumper", description: "由 LI.FI 驱动的跨链 DEX/Bridge 聚合体验，适合观察桥和 DEX 路线。", url: "https://jumper.exchange", features: ["跨链", "Bridge", "DEX"] },
+  { category: "routes", name: "Rango", description: "跨生态 DEX/Bridge Aggregator，适合研究多链覆盖和折叠式 Route Detail。", url: "https://rango.exchange", features: ["80+ 链", "Route Detail", "跨生态"] },
+  { category: "routes", name: "Bungee / Socket", description: "跨链路由与 Simulated Quotes，适合对比耗时、费用和路线，不把报价包装成确定收益。", url: "https://www.bungee.exchange", features: ["Simulated Quotes", "Gas Refuel", "路由对比"] },
+  { category: "onchain", name: "EigenPhi", description: "MEV 与 DEX 套利路径分析，适合拆解交易路径、机器人和历史利润。", url: "https://eigenphi.io", features: ["MEV", "交易路径", "Bot 分析"] },
+  { category: "onchain", name: "DeFiLlama", description: "链上 DeFi 数据与 Meta-DEX 聚合入口，可辅助观察 DEX、收益和协议流动性。", url: "https://defillama.com", features: ["DEX 聚合", "协议数据", "流动性"] },
+  { category: "onchain", name: "Odos", description: "多路径拆单聚合器，适合研究复杂路径和滑点优化。", url: "https://www.odos.xyz", features: ["Smart Order", "多路径", "滑点优化"] },
+  { category: "onchain", name: "1inch", description: "经典 DEX 聚合器，适合与其他路由的报价、拆单和流动性进行比较。", url: "https://1inch.io", features: ["DEX 聚合", "拆单", "流动性"] },
+  { category: "onchain", name: "CoinMarketCap API", description: "市场情报与行情数据入口，可用于错价发现和外部市场数据对照。", url: "https://coinmarketcap.com/api/", features: ["行情 API", "市场数据", "错价发现"] },
+  { category: "automation", name: "Cryptohopper", description: "资金预部署在多个交易所，通过同时操作不同账户做 Exchange Arbitrage，不依赖跨所转账。", url: "https://support.cryptohopper.com/en/articles/9144206-how-does-arbitrage-work", features: ["预部署资金", "CEX 套利", "自动化"] },
+  { category: "automation", name: "Hummingbot Academy", description: "开源交易机器人与 Academy 资源，覆盖做市、CEX/DEX 套利和网格机器人。", url: "https://hummingbot.org/academy/", features: ["开源", "机器人", "CEX/DEX"] },
+  { category: "learning", name: "Flashbots", description: "MEV、Searcher、私有交易流和原子化套利的基础研究资源。", url: "https://docs.flashbots.net", features: ["MEV", "Searcher", "私有交易流"] },
+  { category: "learning", name: "RareSkills DeFi Book", description: "深入理解 AMM、Uniswap 数学、闪电贷和套利机制。", url: "https://www.rareskills.io", features: ["AMM 数学", "闪电贷", "DeFi"] },
+  { category: "learning", name: "Paradigm Research", description: "流动性机制、AMM 经济学、无常损失与套利博弈的研究文章。", url: "https://www.paradigm.xyz/writing", features: ["研究", "AMM 经济学", "流动性"] },
+  { category: "learning", name: "P2P.Army 三角套利", description: "专门的三角套利 Scanner 页面，集中展示 Order Book、Maker/Taker、Route、Exchange 与 Profit。", url: "https://p2p.army/en/cc/triangle_arbitrage", features: ["三角套利", "Order Book", "Profit"] },
+  { category: "learning", name: "P2P.Army DEX/CEX FAQ", description: "关于交易规模、流动性与 DEX/CEX 套利限制的 FAQ，适合作为容量分析入口。", url: "https://p2p.army/en/info/faq-dex", features: ["容量", "流动性", "FAQ"] },
+  { category: "learning", name: "LI.FI Route Schemas", description: "Route、feeCosts、gasCosts、toAmountMin 等字段的官方数据结构参考。", url: "https://docs.li.fi/agents/reference/schemas", features: ["官方文档", "feeCosts", "toAmountMin"] },
+  { category: "learning", name: "LI.FI Request Routes", description: "advanced/routes 与 CHEAPEST、FASTEST、Bridge/Exchange 过滤参数的官方文档。", url: "https://docs.li.fi/sdk/request-routes", features: ["advanced/routes", "CHEAPEST", "FASTEST"] },
 ];
 
 const diagnosisSnapshot = {
@@ -362,29 +397,31 @@ function MonitoringPlatformsView() {
         </div>
         <span className="read-only-badge">外部工具 · 只读</span>
       </div>
-      <div className="platform-grid">
-        {monitoringPlatforms.map((platform) => (
-          <article className="platform-card" key={platform.name}>
-            <div className="platform-card-top">
-              <div className="platform-logo-wrap">
-                <img src={platform.image} alt={`${platform.name} logo`} className="platform-logo" />
+      <div className="resource-summary" aria-label="资源集合统计"><strong>{monitoringPlatforms.length}</strong><span>个已整理资源</span><span>·</span><span>6 类研究用途</span><span>·</span><span>全部为外部链接</span></div>
+      <div className="resource-sections">
+        {monitoringCategories.map((category) => {
+          const resources = monitoringPlatforms.filter((platform) => platform.category === category.id);
+          return (
+            <section className="resource-section" key={category.id} aria-labelledby={`resource-${category.id}`}>
+              <div className="resource-section-heading"><div><p className="section-kicker">{category.id.toUpperCase()}</p><h3 id={`resource-${category.id}`}>{category.label}</h3><p>{category.note}</p></div><span>{resources.length} 个</span></div>
+              <div className="platform-grid">
+                {resources.map((platform) => (
+                  <article className="platform-card" key={platform.name}>
+                    <div className="platform-card-top">
+                      <div className="platform-logo-wrap"><img src={`https://www.google.com/s2/favicons?domain=${new URL(platform.url).hostname}&sz=128`} alt={`${platform.name} logo`} className="platform-logo" /></div>
+                      <div><h4>{platform.name}</h4>{platform.handle && <p className="platform-handle">{platform.handle}</p>}</div>
+                    </div>
+                    <p className="platform-description">{platform.description}</p>
+                    <ul className="platform-features" aria-label={`${platform.name} 主要信息`}>{platform.features.map((feature) => <li key={feature}>{feature}</li>)}</ul>
+                    <a className="platform-link" href={platform.url} target="_blank" rel="noreferrer">打开资源 <span aria-hidden="true">↗</span></a>
+                  </article>
+                ))}
               </div>
-              <div>
-                <h3>{platform.name}</h3>
-                {platform.handle && <p className="platform-handle">{platform.handle}</p>}
-              </div>
-            </div>
-            <p className="platform-description">{platform.description}</p>
-            <ul className="platform-features" aria-label={`${platform.name} 主要信息`}>
-              {platform.features.map((feature) => <li key={feature}>{feature}</li>)}
-            </ul>
-            <a className="platform-link" href={platform.url} target="_blank" rel="noreferrer">
-              打开平台 <span aria-hidden="true">↗</span>
-            </a>
-          </article>
-        ))}
+            </section>
+          );
+        })}
       </div>
-      <p className="monitoring-note">提示：费率、APR、持仓量和警报均以各平台实时页面为准，执行前仍需独立核对流动性、手续费、滑点、延迟和单腿成交风险。</p>
+      <p className="monitoring-note">分类是研究用途，不代表本站背书或实时可用性保证。外部报价、费率、流动性、费用和服务状态需回到原站独立核对；任何屏幕价差都必须经过本站诊断终端验证。</p>
     </section>
   );
 }
