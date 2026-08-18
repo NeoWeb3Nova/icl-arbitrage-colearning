@@ -40,6 +40,14 @@ const wagmiConfig = createConfig({
 
 const queryClient = new QueryClient();
 
+const monitoringPlatforms = [
+  { name: "Loris Tools", handle: "@LorisTools", description: "专门做加密货币永续合约资金费率套利扫描器，实时数据覆盖广、可灵活筛选。", url: "https://loris.tools", image: "https://www.google.com/s2/favicons?domain=loris.tools&sz=128", features: ["实时数据", "灵活筛选", "资金费率套利"] },
+  { name: "CoinGlass", handle: "@coinglass_com", description: "比较常用，中文友好，基础功能免费。", url: "https://coinglass.com/zh/FundingRate", image: "https://www.google.com/s2/favicons?domain=coinglass.com&sz=128", features: ["中文界面", "基础免费", "资金费率"] },
+  { name: "Sharpe", description: "无需注册，支持 33 家交易所、年化 APR 归一化、币种×交易所热力图和单币跨所对比。", url: "https://sharpe.ai/funding-rates", image: "https://www.google.com/s2/favicons?domain=sharpe.ai&sz=128", features: ["无需注册", "33 家交易所", "APR 归一化"] },
+  { name: "PerpFinder", handle: "@PerpFinderCom", description: "实时监控套利价差与热力图，同时显示持仓量。", url: "https://perpfinder.com/tools/funding-rates", image: "https://www.google.com/s2/favicons?domain=perpfinder.com&sz=128", features: ["实时监控", "套利价差", "持仓量"] },
+  { name: "CoinBeacon", description: "简洁排行榜（最高/最低费率），归一化到 8 小时，支持警报。", url: "https://coinbeacon.io/funding-rates", image: "https://www.google.com/s2/favicons?domain=coinbeacon.io&sz=128", features: ["最高/最低费率", "8 小时归一化", "警报"] },
+];
+
 function shortAddress(address) {
   return address ? `${address.slice(0, 6)}…${address.slice(-4)}` : "";
 }
@@ -177,6 +185,44 @@ function ToolsView({ chain, isConnected, address, connect, disconnect, isPending
   );
 }
 
+function MonitoringPlatformsView() {
+  return (
+    <section className="monitoring-view" aria-label="套利监控平台集合">
+      <div className="monitoring-heading">
+        <div>
+          <p className="section-kicker">FUNDING RATE MONITORS</p>
+          <h2>套利监控平台集合</h2>
+          <p>用这些工具发现永续合约资金费率机会；屏幕价差不等于可执行净收益。</p>
+        </div>
+        <span className="read-only-badge">外部工具 · 只读</span>
+      </div>
+      <div className="platform-grid">
+        {monitoringPlatforms.map((platform) => (
+          <article className="platform-card" key={platform.name}>
+            <div className="platform-card-top">
+              <div className="platform-logo-wrap">
+                <img src={platform.image} alt={`${platform.name} logo`} className="platform-logo" />
+              </div>
+              <div>
+                <h3>{platform.name}</h3>
+                {platform.handle && <p className="platform-handle">{platform.handle}</p>}
+              </div>
+            </div>
+            <p className="platform-description">{platform.description}</p>
+            <ul className="platform-features" aria-label={`${platform.name} 主要信息`}>
+              {platform.features.map((feature) => <li key={feature}>{feature}</li>)}
+            </ul>
+            <a className="platform-link" href={platform.url} target="_blank" rel="noreferrer">
+              打开平台 <span aria-hidden="true">↗</span>
+            </a>
+          </article>
+        ))}
+      </div>
+      <p className="monitoring-note">提示：费率、APR、持仓量和警报均以各平台实时页面为准，执行前仍需独立核对流动性、手续费、滑点、延迟和单腿成交风险。</p>
+    </section>
+  );
+}
+
 function App() {
   const [view, setView] = useState("experiment");
   const { address, chain, isConnected } = useConnection();
@@ -199,13 +245,14 @@ function App() {
       <nav className="view-nav" aria-label="网站主要区域">
         <button type="button" className={view === "experiment" ? "is-active" : ""} aria-current={view === "experiment" ? "page" : undefined} onClick={() => setView("experiment")}>实验工作流</button>
         <button type="button" className={view === "tools" ? "is-active" : ""} aria-current={view === "tools" ? "page" : undefined} onClick={() => setView("tools")}>LI.FI 工具</button>
+        <button type="button" className={view === "monitoring" ? "is-active" : ""} aria-current={view === "monitoring" ? "page" : undefined} onClick={() => setView("monitoring")}>套利监控平台</button>
       </nav>
 
       {view === "experiment" ? (
         <ExperimentView />
-      ) : (
+      ) : view === "tools" ? (
         <ToolsView chain={chain} isConnected={isConnected} address={address} connect={connect} disconnect={disconnect} isPending={isPending} />
-      )}
+      ) : <MonitoringPlatformsView />}
     </main>
   );
 }
