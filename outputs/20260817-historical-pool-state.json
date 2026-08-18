@@ -1,0 +1,49 @@
+{
+  "evidence_type": "historical_read_only",
+  "chain": "Ethereum mainnet",
+  "transaction": "0x82a206c9dff00bf7b205987bdcd9384c06c6d9962aa929c84ab45dd0330c4e72",
+  "block": 25747425,
+  "pool_manager": "0x000000000004444c5dc75cb358380d2e3de08a90",
+  "tokens": {
+    "usdc": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+    "snusd": "0x08EFCC2F3e61185D0EA7F8830B3FEc9Bfa2EE313"
+  },
+  "swap_events": [
+    {
+      "pool_id": "0x7a3536c19286fb12964c85d5bc4146ed2af95067570f528c1445d8530f1aca9c",
+      "amount0_snusd_raw": "960382602856963720399",
+      "amount1_usdc_raw": "-653132660",
+      "sqrt_price_x96_after": "62404900837959247018443",
+      "active_liquidity_after": "5445735438709935",
+      "tick_after": -281099,
+      "fee": 199000
+    },
+    {
+      "pool_id": "0xccf5f35a3e2946ca60339957e6a803f91369422e736ea73ca80c5f5820a7ecee",
+      "amount0_snusd_raw": "74214382643453373585",
+      "amount1_usdc_raw": "-56794145",
+      "sqrt_price_x96_after": "73045581706162189325590",
+      "active_liquidity_after": "406003535295346",
+      "tick_after": -277950,
+      "fee": 49452
+    }
+  ],
+  "interpretation": {
+    "confirmed": [
+      "The historical transaction used two Uniswap V4 sNUSD/USDC pools.",
+      "The first pool supplied 960.382602856963720399 sNUSD for 653.132660 USDC.",
+      "The second pool supplied 74.214382643453373585 sNUSD for 56.794145 USDC.",
+      "The combined swap matches 1,034.596985500417093984 sNUSD for 709.926805 USDC."
+    ],
+    "not_confirmed": [
+      "Token balances cannot be treated as Uniswap V4 reserves because v4 is a singleton PoolManager with concentrated liquidity.",
+      "The exact pre-swap pool reserves and a constant-product equivalent depth were not recovered from the available non-archive RPC.",
+      "The previous 4,942 USDC / 8,237 sNUSD depth remains a simulation assumption, not historical pool state."
+    ]
+  },
+  "sources": [
+    "https://etherscan.io/tx/0x82a206c9dff00bf7b205987bdcd9384c06c6d9962aa929c84ab45dd0330c4e72",
+    "https://etherscan.io/address/0x7ffe42c4a5deea5b0fec41c94c136cf115597227",
+    "https://developers.uniswap.org/docs/sdks/v4/guides/pool-data"
+  ]
+}

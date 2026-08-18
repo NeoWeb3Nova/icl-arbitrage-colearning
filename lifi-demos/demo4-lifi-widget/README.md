@@ -1,6 +1,8 @@
-# LI.FI 实时换币与跨链 Widget
+# 套利共学实验室 · LI.FI Widget
 
-EVM-only LI.FI Widget。浏览器负责连接钱包和请求签名；Vercel Function 代理 LI.FI API，并在服务端添加 `LIFI_API_KEY`。
+这是一个工作流优先的链上套利学习实验室。实验页面展示每一步的背景、输入、输出、证据、失败条件和最终判断；LI.FI Widget 作为独立工具保留。
+
+当前首个案例：Arbitrum `ETH → USDC → ETH` Paper Trading。它是只读报价模拟，不是成交记录；理论和保守往返结果均为负，因此结论是明确否定信号，不执行。
 
 在线地址：https://icl-arbitrage-lifi-widget.vercel.app
 
@@ -10,6 +12,14 @@ EVM-only LI.FI Widget。浏览器负责连接钱包和请求签名；Vercel Func
 npm install
 npm run dev
 ```
+
+## 工作流数据
+
+- 工作流定义：`src/workflows/eth-usdc-eth.js`
+- 首个证据快照：`public/evidence/20260818-lifi-paper-trade.json`
+- 测试：`test/workflow.test.js`
+
+新增案例时，添加一个工作流定义和对应的证据快照。不要把 Paper Trading、实时只读报价或真实交易混写；页面必须明确标注证据类型。
 
 普通 Vite 开发服务器不运行 `/api/lifi`。完整本地联调需要 Vercel CLI：
 

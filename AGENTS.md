@@ -1,5 +1,24 @@
 # Agent Instructions
 
+## Agent skills
+
+### Issue tracker
+
+Issues and specs live in GitHub Issues for
+`NeoWeb3Nova/icl-arbitrage-colearning`. Use `gh` CLI. See
+`docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Use the default labels: `needs-triage`, `needs-info`,
+`ready-for-agent`, `ready-for-human`, and `wontfix`. See
+`docs/agents/triage-labels.md`.
+
+### Domain docs
+
+This is a single-context repository. Read root `CONTEXT.md` when present
+and relevant ADRs under `docs/adr/`. See `docs/agents/domain.md`.
+
 ## 套利共学互动学习
 
 本项目是链上套利共学项目。代理的目标不是替用户完成学习，而是帮助用户形成可解释、可验证、可复用的套利能力。

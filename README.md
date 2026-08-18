@@ -7,6 +7,7 @@
 > 发起原文: [X / Twitter](https://x.com/brucexu_eth/status/2082831191376613391)
 > 最新说明: [为什么我在熊市发起链上套利残酷共学？顺便分享下我的学习大纲](https://x.com/brucexu_eth/status/2083935229757337948)（2026-08-02）
 > Hermes 配置更新: [从零配置一个链上套利辅助和学习的 Hermes Agent](https://x.com/brucexu_eth/status/2084604766714261729)（2026-08-04）
+> 第一性原理更新: [新手必读链上套利的第一性原理：从价差到可执行净利润](https://x.com/brucexu_eth/status/2086652810905751610)（2026-08-10）
 > Obsidian 专栏: `D:\ObsidianWorkspace\Neo\链上套利残酷共学`（入口：`00-专栏首页.md`）
 
 ## 我的目标
@@ -25,7 +26,7 @@
 2. **第二周**：公开案例还原、数据脚本、Hermes 候选机会检查、回测与 Paper Trading。
 3. **第三周**：筛选 2–5 个符合个人能力圈的方向，深挖 Edge，留下验证脚本或明确否定证据。
 
-每日执行安排见 [21 天链上套利学习计划](./learning-plan.md)。完整方向整理见 [research/initiator-guidance-2026-08-02.md](./research/initiator-guidance-2026-08-02.md)；Hermes 配置更新见 [research/initiator-hermes-setup-2026-08-04.md](./research/initiator-hermes-setup-2026-08-04.md)；人物、学习样本与工具资料见 [research/people-and-tools.md](./research/people-and-tools.md)；共学群重要代码库分享见 [shares/](./shares/)。现有 5 个模块继续保留，作为三周路线下的内部工作包。
+每日执行安排见 [21 天链上套利学习计划](./learning-plan.md)。完整方向整理见 [research/initiator-guidance-2026-08-02.md](./research/initiator-guidance-2026-08-02.md)；Hermes 配置更新见 [research/initiator-hermes-setup-2026-08-04.md](./research/initiator-hermes-setup-2026-08-04.md)；第一性原理、七步检查法与 14 类套利地图见 [research/initiator-arbitrage-first-principles-2026-08-10.md](./research/initiator-arbitrage-first-principles-2026-08-10.md)；人物、学习样本与工具资料见 [research/people-and-tools.md](./research/people-and-tools.md)；共学群重要代码库分享见 [shares/](./shares/)。现有 5 个模块继续保留，作为三周路线下的内部工作包。
 
 在线工具：[LI.FI 实时换币与跨链 Widget](https://icl-arbitrage-lifi-widget.vercel.app)（EVM；所有交易均由用户钱包手动确认）。
 
@@ -50,6 +51,7 @@ icl-arbitrage-colearning/
 ├── research/                    ← 研究发现
 │   ├── initiator-guidance-2026-08-02.md ← 发起者路线说明整理
 │   ├── initiator-hermes-setup-2026-08-04.md ← Hermes 配置与学习 Prompt 更新
+│   ├── initiator-arbitrage-first-principles-2026-08-10.md ← 第一性原理、检查法与套利地图
 │   ├── lifi-comprehensive-guide.md ← LI.FI 全面研究文档（产品矩阵/API/SDK/实测）
 │   ├── lifi-sdk-decision.md       ← LI.FI SDK 使用建议与决策记录
 │   ├── people-and-tools.md         ← 学习榜样、证据边界与工具地图
