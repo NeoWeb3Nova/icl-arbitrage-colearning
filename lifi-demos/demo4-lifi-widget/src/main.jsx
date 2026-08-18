@@ -1,7 +1,7 @@
 import { LiFiWidgetLight } from "@lifi/widget-light";
 import { useEthereumIframeHandler } from "@lifi/widget-light/ethereum";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { StrictMode, useMemo, useState } from "react";
+import { StrictMode, useCallback, useMemo, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { createClient, http } from "viem";
 import { arbitrum, base, mainnet, optimism, polygon } from "viem/chains";
@@ -60,6 +60,41 @@ const diagnosisSnapshot = {
   duration: "0s（快照）",
   evidence: "/evidence/20260818-lifi-paper-trade.json",
 };
+
+const quoteAddress = "0x552008c0f6872d7aa9e46e4b5a8c4a8f8f8f8f8f";
+const nativeToken = "0x0000000000000000000000000000000000000000";
+const usdcToken = "0xaf88d065e77c8cC2239327C5EDb3A432268e5831";
+const initialEthWei = "10000000000000000";
+
+function formatUnits(value, decimals, precision = 6) {
+  const digits = String(value).padStart(decimals + 1, "0");
+  const whole = digits.slice(0, -decimals) || "0";
+  const fraction = digits.slice(-decimals).slice(0, precision).replace(/0+$/, "");
+  return fraction ? `${whole}.${fraction}` : whole;
+}
+
+function formatRoi(initial, output) {
+  const delta = BigInt(output) - BigInt(initial);
+  const sign = delta < 0n ? "-" : "+";
+  const scaled = (delta < 0n ? -delta : delta) * 100000n / BigInt(initial);
+  return `${sign}${scaled / 1000n}.${String(scaled % 1000n).padStart(3, "0")}%`;
+}
+
+async function requestQuote(fromToken, toToken, fromAmount) {
+  const params = new URLSearchParams({
+    fromChain: "42161",
+    toChain: "42161",
+    fromToken,
+    toToken,
+    fromAmount,
+    fromAddress: quoteAddress,
+    toAddress: quoteAddress,
+    slippage: "0.005",
+  });
+  const response = await fetch(`/api/lifi/quote?${params}`);
+  if (!response.ok) throw new Error(`Quote 请求失败（HTTP ${response.status}）`);
+  return response.json();
+}
 
 function shortAddress(address) {
   return address ? `${address.slice(0, 6)}…${address.slice(-4)}` : "";
@@ -135,6 +170,47 @@ function WorkflowCanvas({ selectedId, onSelect }) {
   );
 }
 
+function LiveQuotePanel() {
+  const [state, setState] = useState({ status: "idle", data: null, error: "" });
+  const refresh = useCallback(async () => {
+    setState({ status: "loading", data: null, error: "" });
+    try {
+      const first = await requestQuote(nativeToken, usdcToken, initialEthWei);
+      const theoretical = await requestQuote(usdcToken, nativeToken, first.estimate.toAmount);
+      const conservative = await requestQuote(usdcToken, nativeToken, first.estimate.toAmountMin);
+      const durations = [first, theoretical, conservative].map((quote) => Number(quote.estimate?.executionDuration || 0));
+      setState({
+        status: "ready",
+        error: "",
+        data: {
+          first: formatUnits(first.estimate.toAmount, 6),
+          firstMin: formatUnits(first.estimate.toAmountMin, 6),
+          theoretical: formatUnits(theoretical.estimate.toAmount, 18, 9),
+          conservative: formatUnits(conservative.estimate.toAmount, 18, 9),
+          theoreticalRoi: formatRoi(initialEthWei, theoretical.estimate.toAmount),
+          conservativeRoi: formatRoi(initialEthWei, conservative.estimate.toAmount),
+          duration: `${Math.max(...durations)}s`,
+          updatedAt: new Date().toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit", second: "2-digit" }),
+        },
+      });
+    } catch (error) {
+      setState({ status: "error", data: null, error: error instanceof Error ? error.message : "Quote 请求失败" });
+    }
+  }, []);
+
+  return (
+    <section className="live-quote-panel" aria-label="实时只读报价">
+      <div className="live-quote-heading">
+        <div><p className="section-kicker">LIVE QUOTE · READ-ONLY</p><h3>刷新当前往返诊断</h3><p>连续请求第一腿、理论第二腿和保守第二腿，不签名、不广播。</p></div>
+        <button type="button" className="refresh-button" onClick={refresh} disabled={state.status === "loading"}>{state.status === "loading" ? "请求中…" : "刷新 Quote"}</button>
+      </div>
+      {state.status === "idle" && <p className="live-quote-empty">尚未请求实时数据。点击刷新后，结果会覆盖本页静态案例指标。</p>}
+      {state.status === "error" && <p className="live-quote-error" role="alert">{state.error}。静态案例仍保留，未将失败请求当作机会。</p>}
+      {state.data && <div className="live-quote-grid"><div><span>第一腿</span><strong>{state.data.first} USDC</strong><small>最低 {state.data.firstMin}</small></div><div><span>理论 ROI</span><strong className="negative">{state.data.theoreticalRoi}</strong><small>返回 {state.data.theoretical} ETH</small></div><div><span>保守 ROI</span><strong className="negative">{state.data.conservativeRoi}</strong><small>返回 {state.data.conservative} ETH</small></div><div><span>报价时间</span><strong>{state.data.updatedAt}</strong><small>Route {state.data.duration}</small></div></div>}
+    </section>
+  );
+}
+
 function DiagnosisView() {
   const funnel = [
     ["报价快照", "1", "已记录"],
@@ -166,6 +242,8 @@ function DiagnosisView() {
         </div>
         <div className="verdict verdict-rejected"><span>✕</span><strong>NOT EXECUTION ROBUST</strong><small>保守结果为负，不执行</small></div>
       </div>
+
+      <LiveQuotePanel />
 
       <div className="metric-grid" aria-label="套利诊断核心指标">
         <div className="metric-card"><span>投入资本</span><strong>{diagnosisSnapshot.capital}</strong><small>{diagnosisSnapshot.capitalUsd}</small></div>

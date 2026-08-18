@@ -99,6 +99,20 @@ h2 { margin: 0; letter-spacing: -0.025em; }
 .monitoring-note { margin: 20px 0 0; color: #98a2b3; font-size: 12px; line-height: 1.6; }
 
 .diagnosis-view { display: grid; gap: 18px; }
+.live-quote-panel { padding: 18px 20px; border: 1px solid #c7d2fe; border-radius: 16px; background: linear-gradient(120deg, #f8faff, #fff); }
+.live-quote-heading { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+.live-quote-heading h3 { margin: 4px 0 5px; font-size: 17px; }
+.live-quote-heading p:not(.section-kicker) { margin: 0; color: #667085; font-size: 12px; line-height: 1.5; }
+.refresh-button { min-height: 40px; padding: 0 15px; border: 0; border-radius: 9px; color: #fff; background: #4f46e5; font-size: 12px; font-weight: 800; cursor: pointer; white-space: nowrap; }
+.refresh-button:hover { background: #4338ca; }
+.refresh-button:focus-visible { outline: 3px solid #a5b4fc; outline-offset: 3px; }
+.refresh-button:disabled { cursor: wait; opacity: 0.65; }
+.live-quote-empty, .live-quote-error { margin: 14px 0 0; padding: 11px 12px; border-radius: 9px; color: #667085; background: #fff; font-size: 12px; }
+.live-quote-error { color: #9a3412; background: #fff7ed; }
+.live-quote-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-top: 16px; }
+.live-quote-grid > div { display: grid; gap: 5px; padding: 11px 12px; border: 1px solid #e0e7ff; border-radius: 10px; background: #fff; }
+.live-quote-grid span, .live-quote-grid small { color: #667085; font-size: 11px; }
+.live-quote-grid strong { font-size: 16px; }
 .diagnosis-hero, .diagnosis-summary { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; }
 .diagnosis-hero { padding: 4px 2px 8px; }
 .diagnosis-hero h2 { margin: 5px 0 6px; font-size: clamp(25px, 4vw, 34px); letter-spacing: -0.04em; }
@@ -179,6 +193,9 @@ h2 { margin: 0; letter-spacing: -0.025em; }
   .diagnosis-columns { grid-template-columns: 1fr; }
   .verdict { width: 100%; }
   .evidence-row { flex-direction: column; }
+  .live-quote-heading { align-items: stretch; flex-direction: column; }
+  .refresh-button { width: 100%; }
+  .live-quote-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 @media (min-width: 700px) and (max-width: 980px) {
