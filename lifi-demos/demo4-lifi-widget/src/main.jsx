@@ -18,7 +18,7 @@ import "./styles.css";
 const widgetConfig = {
   integrator: "arbitrage-research",
   variant: "compact",
-  appearance: "light",
+  appearance: "dark",
   fromChain: 1,
   toChain: 42161,
   fromToken: "0x0000000000000000000000000000000000000000",
@@ -28,7 +28,29 @@ const widgetConfig = {
   buildUrl: true,
   languages: { default: "zh", allow: ["zh", "en"] },
   chains: { allow: [1, 10, 137, 8453, 42161] },
-  theme: { container: { border: "1px solid #dfe3f0", borderRadius: "16px" } },
+  theme: {
+    container: {
+      backgroundColor: "#101012",
+      border: "1px solid #2a2a2e",
+      borderRadius: "0",
+      color: "#f4f4f5",
+      fontFamily: 'ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace',
+    },
+    routesContainer: {
+      backgroundColor: "#17171a",
+      border: "1px solid #2a2a2e",
+      borderRadius: "0",
+    },
+    chainSidebarContainer: {
+      backgroundColor: "#101012",
+      borderColor: "#2a2a2e",
+    },
+    header: {
+      backgroundColor: "#101012",
+      borderBottom: "1px solid #2a2a2e",
+    },
+    navigation: { edge: false },
+  },
   sdkConfig: {
     apiUrl: `${window.location.origin}/api/lifi`,
     routeOptions: { maxPriceImpact: 0.1, allowSwitchChain: true },

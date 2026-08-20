@@ -311,7 +311,7 @@ main { width: min(1240px, 100%); padding-top: 0; }
 .next-step, .platform-features li, .reason-icon { color: var(--ref-accent); background: rgba(255,46,166,.08); border-radius: 0; }
 .wallet-button, .refresh-button { border-radius: 0; color: var(--ref-bg); background: var(--ref-accent); }
 .wallet-button:hover, .refresh-button:hover { background: var(--ref-accent-strong); }
-.widget { border-radius: 0; box-shadow: none; }
+.widget { border-radius: 0; background: var(--ref-surface); box-shadow: none; }
 .platform-card:hover { border-color: var(--ref-accent); box-shadow: none; transform: none; }
 .platform-logo-wrap { border-color: var(--ref-border); border-radius: 0; background: var(--ref-surface-2); }
 .platform-link { color: var(--ref-accent); border-color: var(--ref-border); }
