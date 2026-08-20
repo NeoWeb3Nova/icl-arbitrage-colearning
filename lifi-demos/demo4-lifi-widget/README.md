@@ -21,7 +21,7 @@ npm run dev
 
 新增案例时，添加一个工作流定义和对应的证据快照。不要把 Paper Trading、实时只读报价或真实交易混写；页面必须明确标注证据类型。
 
-普通 Vite 开发服务器不运行 `/api/lifi`。完整本地联调需要 Vercel CLI：
+`npm run dev` 会在本地转发 Binance 行情接口 `/api/binance/*`。普通 Vite 开发服务器不运行 `/api/lifi`。LI.FI 完整本地联调需要 Vercel CLI：
 
 ```bash
 npx vercel dev
@@ -40,14 +40,19 @@ npm run build
 
 ```text
 LIFI_API_KEY=<LI.FI Partner Portal key>
+BINANCE_KEY=<Binance Web3 API Key>
+BINANCE_SECRET=<Binance Web3 Secret Key>
 ```
 
-不要创建 `VITE_LIFI_API_KEY`，也不要把 Key 传入 Widget 配置；`VITE_*` 会进入公开浏览器 bundle。
+不要创建 `VITE_LIFI_API_KEY` 或 `VITE_BINANCE_*`，也不要把 Key 传入前端配置；`VITE_*` 会进入公开浏览器 bundle。
+
+Binance 行情页按 [Authentication](https://web3.binance.com/en/dev-docs/authentication) 在服务端签名：`X-OC-APIKEY`、`X-OC-TIMESTAMP`、`X-OC-SIGN`（HMAC-SHA256，再 Base64）。密钥只出现在 `/api/binance`，不进浏览器。
 
 ## 安全边界
 
-- Key 只由 `/api/lifi/*` 服务端函数读取，不返回浏览器。
-- 代理固定转发到 `https://li.quest/v1`，仅允许 GET/POST。
+- Key 只由 `/api/lifi/*` 和 `/api/binance` 服务端函数读取，不返回浏览器。
+- LI.FI 代理固定转发到 `https://li.quest/v1`，仅允许 GET/POST。
+- Binance 代理固定转发到 `https://web3.binance.com/build`，仅允许已登记的 Market GET 路由。
 - 所有授权、切链、签名和广播都需要用户钱包确认。
 - 实时报价不是成交保证；执行前核对资产、链、最低到账、Gas、滑点与失败风险。
 - 公开代理仍可能被访客消耗额度；出现真实滥用后再增加平台级限流。

@@ -7,6 +7,11 @@ import { createClient, http } from "viem";
 import { arbitrum, base, mainnet, optimism, polygon } from "viem/chains";
 import { createConfig, useConnect, useConnection, useDisconnect, WagmiProvider } from "wagmi";
 import { injected } from "wagmi/connectors";
+import { BinanceMarketView } from "./binance-market.jsx";
+import { ScanView } from "./scan-market.jsx";
+import { AuthView, WatchlistView } from "./account-views.jsx";
+import { supabase, supabaseConfigured } from "./supabase.js";
+import { useAuthUser } from "./use-auth-user.js";
 import { ETH_USDC_ETH_WORKFLOW as workflow } from "./workflows/eth-usdc-eth.js";
 import "./styles.css";
 
@@ -428,6 +433,7 @@ function MonitoringPlatformsView() {
 
 function App() {
   const [view, setView] = useState("diagnosis");
+  const user = useAuthUser();
   const { address, chain, isConnected } = useConnection();
   const { mutate: connect, isPending } = useConnect();
   const { mutate: disconnect } = useDisconnect();
@@ -437,27 +443,41 @@ function App() {
       <header className="site-header">
         <div>
           <p className="eyebrow">ARBITRAGE CO-LEARNING LAB</p>
-          <h1>从价差观察，到可验证结论。</h1>
+          <h1>ARBITRAGE<span className="header-accent">//</span>SCAN</h1>
           <p className="subtitle">用工作流拆开每一次套利实验：背景、报价、成本、风险与否定条件。</p>
         </div>
-        {(view === "diagnosis" || view === "experiment") && (
+        <div className="account-nav">
+          {user ? <><span className="account-email">{user.email}</span><button type="button" onClick={() => supabase.auth.signOut()}>Sign out</button></> : supabaseConfigured ? <><button type="button" onClick={() => setView("login")}>Sign in</button><button type="button" onClick={() => setView("signup")}>Sign up</button></> : <span>Supabase unavailable</span>}
+        </div>
+        {(view === "diagnosis" || view === "experiment" || view === "binance" || view === "scan") && (
           <span className="read-only-badge">只读研究 · 不自动交易</span>
         )}
       </header>
 
       <nav className="view-nav" aria-label="网站主要区域">
+        <button type="button" className={view === "scan" ? "is-active" : ""} aria-current={view === "scan" ? "page" : undefined} onClick={() => setView("scan")}>Scan</button>
+        <button type="button" className={view === "watchlist" ? "is-active" : ""} aria-current={view === "watchlist" ? "page" : undefined} onClick={() => setView("watchlist")}>Watchlist</button>
         <button type="button" className={view === "diagnosis" ? "is-active" : ""} aria-current={view === "diagnosis" ? "page" : undefined} onClick={() => setView("diagnosis")}>诊断终端</button>
         <button type="button" className={view === "experiment" ? "is-active" : ""} aria-current={view === "experiment" ? "page" : undefined} onClick={() => setView("experiment")}>实验工作流</button>
         <button type="button" className={view === "tools" ? "is-active" : ""} aria-current={view === "tools" ? "page" : undefined} onClick={() => setView("tools")}>LI.FI 工具</button>
+        <button type="button" className={view === "binance" ? "is-active" : ""} aria-current={view === "binance" ? "page" : undefined} onClick={() => setView("binance")}>Binance 行情</button>
         <button type="button" className={view === "monitoring" ? "is-active" : ""} aria-current={view === "monitoring" ? "page" : undefined} onClick={() => setView("monitoring")}>套利监控平台</button>
       </nav>
 
-      {view === "diagnosis" ? (
+      {view === "scan" ? (
+        <ScanView onInvestigate={() => setView("diagnosis")} onAuthRequired={() => setView("login")} />
+      ) : view === "watchlist" ? (
+        <WatchlistView onScan={() => setView("scan")} />
+      ) : view === "login" || view === "signup" ? (
+        <AuthView mode={view} onDone={() => setView("watchlist")} />
+      ) : view === "diagnosis" ? (
         <DiagnosisView />
       ) : view === "experiment" ? (
         <ExperimentView />
       ) : view === "tools" ? (
         <ToolsView chain={chain} isConnected={isConnected} address={address} connect={connect} disconnect={disconnect} isPending={isPending} />
+      ) : view === "binance" ? (
+        <BinanceMarketView />
       ) : <MonitoringPlatformsView />}
     </main>
   );

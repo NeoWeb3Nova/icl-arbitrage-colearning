@@ -4,6 +4,7 @@
   "outputDirectory": "dist",
   "rewrites": [
     { "source": "/api/lifi/:path*", "destination": "/api/proxy?path=:path*" },
+    { "source": "/api/binance/:path*", "destination": "/api/binance?route=:path*" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }

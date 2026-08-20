@@ -12,9 +12,11 @@
   },
   "dependencies": {
     "@lifi/widget-light": "^4.3.2",
+    "@supabase/supabase-js": "^2.112.3",
     "@tanstack/react-query": "^5.101.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "undici": "^8.10.0",
     "viem": ">=2.52.0",
     "wagmi": "^3.7.1"
   },
