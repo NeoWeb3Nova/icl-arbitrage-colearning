@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-20T13:53:17Z",
+  "title": "Design System: ARBITRAGE//SCAN",
+  "extensions": {
+    "colorMeta": {
+      "editorial-magenta": { "role": "primary", "displayName": "Editorial Magenta", "canonical": "#ff2ea6", "tonalRamp": ["#260014", "#4d0028", "#73003c", "#990050", "#bf0064", "#e63386", "#ff70b3", "#ffc2df"] },
+      "signal-cyan": { "role": "secondary", "displayName": "Signal Cyan", "canonical": "#00e6e6", "tonalRamp": ["#002929", "#005252", "#007a7a", "#00a3a3", "#00cccc", "#33eded", "#80f5f5", "#c2ffff"] },
+      "terminal-black": { "role": "neutral", "displayName": "Terminal Black", "canonical": "#050505", "tonalRamp": ["#050505", "#101012", "#17171a", "#202024", "#2a2a2e", "#52525b", "#a1a1aa", "#f4f4f5"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Terminal Display", "purpose": "Scan and major research headings." },
+      "label": { "displayName": "Instrument Label", "purpose": "Uppercase metadata, evidence types, and state labels." }
+    },
+    "shadows": [],
+    "motion": [
+      { "name": "state-transition", "value": "160ms ease", "purpose": "Border, color, and tonal changes on interaction." },
+      { "name": "reduced-motion", "value": "0.01ms", "purpose": "Respect prefers-reduced-motion without removing state visibility." }
+    ],
+    "breakpoints": [
+      { "name": "mobile", "value": "560px" },
+      { "name": "tablet", "value": "700px" },
+      { "name": "desktop-narrow", "value": "880px" },
+      { "name": "desktop-grid", "value": "980px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Primary action used for scan, refresh, wallet, and recovery actions.",
+      "html": "<button class=\"ds-btn-primary\">RUN SCAN</button>",
+      "css": ".ds-btn-primary { background:#ff2ea6; color:#050505; min-height:40px; padding:10px 15px; border:0; border-radius:0; font:800 11px/1.4 ui-monospace,monospace; letter-spacing:.06em; text-transform:uppercase; transition:background-color 160ms ease; } .ds-btn-primary:hover { background:#ff5cbe; } .ds-btn-primary:focus-visible { outline:2px solid #67e8f9; outline-offset:3px; }"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Secondary account or navigation action with no fill.",
+      "html": "<button class=\"ds-btn-ghost\">SIGN IN</button>",
+      "css": ".ds-btn-ghost { min-height:40px; padding:6px 8px; border:1px solid #2a2a2e; border-radius:0; background:transparent; color:#a1a1aa; font:700 10px/1.4 ui-monospace,monospace; letter-spacing:.06em; text-transform:uppercase; } .ds-btn-ghost:hover { border-color:#ff2ea6; color:#ff2ea6; } .ds-btn-ghost:focus-visible { outline:2px solid #67e8f9; outline-offset:3px; }"
+    },
+    {
+      "name": "Research Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Dark square input for capital, filters, and account forms.",
+      "html": "<label class=\"ds-input-label\">CAPITAL<input class=\"ds-input\" value=\"5000\" /></label>",
+      "css": ".ds-input-label { display:grid; gap:8px; color:#a1a1aa; font:800 11px/1.4 ui-monospace,monospace; letter-spacing:.08em; text-transform:uppercase; } .ds-input { min-height:40px; padding:0 10px; border:1px solid #2a2a2e; border-radius:0; background:#050505; color:#f4f4f5; font:400 13px/1.5 ui-monospace,monospace; } .ds-input:focus-visible { border-color:#ff2ea6; outline:2px solid #67e8f9; outline-offset:3px; }"
+    },
+    {
+      "name": "Signal Chip",
+      "kind": "chip",
+      "refersTo": "chip-signal",
+      "description": "Small explicit state label for read-only, simulated, or semantic status.",
+      "html": "<span class=\"ds-chip\">SIMULATED DATA</span>",
+      "css": ".ds-chip { display:inline-flex; align-items:center; min-height:28px; padding:6px 8px; border:1px solid rgba(255,46,166,.45); border-radius:0; background:rgba(255,46,166,.08); color:#ff2ea6; font:800 10px/1.4 ui-monospace,monospace; letter-spacing:.06em; text-transform:uppercase; }"
+    },
+    {
+      "name": "Research Panel",
+      "kind": "card",
+      "refersTo": "panel",
+      "description": "Flat bordered surface for workflow, diagnosis, market, and account content.",
+      "html": "<section class=\"ds-panel\"><p class=\"ds-kicker\">EVIDENCE</p><h2>Conservative outcome</h2></section>",
+      "css": ".ds-panel { padding:20px; border:1px solid #2a2a2e; border-radius:0; background:#101012; color:#f4f4f5; } .ds-kicker { margin:0 0 8px; color:#ff2ea6; font:800 10px/1.4 ui-monospace,monospace; letter-spacing:.18em; text-transform:uppercase; }"
+    },
+    {
+      "name": "Primary Navigation",
+      "kind": "nav",
+      "refersTo": "navigation",
+      "description": "Full-width application navigation with square active state and mobile scrolling.",
+      "html": "<nav class=\"ds-nav\"><button class=\"ds-nav-active\">SCAN</button><button>WATCHLIST</button></nav>",
+      "css": ".ds-nav { display:flex; gap:4px; overflow-x:auto; padding:4px; border:1px solid #2a2a2e; border-radius:0; background:#101012; } .ds-nav button { min-height:40px; flex:0 0 auto; padding:9px 14px; border:0; border-radius:0; background:transparent; color:#a1a1aa; font:700 11px/1.4 ui-monospace,monospace; letter-spacing:.08em; text-transform:uppercase; } .ds-nav button:hover { background:#17171a; color:#ff2ea6; } .ds-nav .ds-nav-active { background:#ff2ea6; color:#050505; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Lab Notebook",
+    "overview": "ARBITRAGE//SCAN is a dark, evidence-first research instrument. It should feel like an active lab notebook translated into a field console: dense enough for comparison, restrained enough that the evidence remains readable, and explicit enough that a visitor can tell simulated, read-only, and negative states apart. The interface is intentionally not a marketing page or a promise of profit. Its visual tension comes from a mostly quiet terminal-black canvas with sparse magenta and cyan signals.",
+    "keyCharacteristics": ["Evidence-first, not conversion-first.", "Flat surfaces with borders and tonal layers instead of shadows.", "Editorial Magenta marks action and selection.", "Signal Cyan marks measured data.", "Risk and simulated states remain explicit."],
+    "rules": [
+      { "name": "The Two-Signal Rule", "body": "Magenta is for action and selection; cyan is for measured data. Do not use either as general decoration.", "section": "colors" },
+      { "name": "The Evidence Boundary Rule", "body": "Simulated data, read-only research, warnings, and negative outcomes must retain explicit text labels in addition to color.", "section": "colors" },
+      { "name": "The Flat Instrument Rule", "body": "Do not add ambient shadows, glass blur, or floating-card effects to ordinary panels. Use a border or tonal shift first.", "section": "elevation" },
+      { "name": "The Instrument Label Rule", "body": "Uppercase tracked labels identify a section or state; they do not replace explanatory copy.", "section": "typography" }
+    ],
+    "dos": ["Do make evidence type and risk state visible in text.", "Do preserve square geometry, thin borders, and flat tonal layering.", "Do keep mobile controls touch-safe and navigation single-line scrollable."],
+    "donts": ["Don't introduce gradients, ambient shadows, glassmorphism, or decorative blur as default surface treatment.", "Don't use pink or cyan as generic decoration or status substitutes.", "Don't present simulated values or read-only quotes as confirmed profit or completed transactions."]
+  }
+}
