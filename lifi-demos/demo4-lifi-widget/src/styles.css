@@ -1,5 +1,5 @@
 :root {
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   color: #172033;
   background: #f5f7fb;
   font-synthesis: none;
@@ -315,7 +315,7 @@ main { width: min(1240px, 100%); padding-top: 0; }
 .platform-card:hover { border-color: var(--ref-accent); box-shadow: none; transform: none; }
 .platform-logo-wrap { border-color: var(--ref-border); border-radius: 0; background: var(--ref-surface-2); }
 .platform-link { color: var(--ref-accent); border-color: var(--ref-border); }
-.diagnosis-summary { border-left: 3px solid var(--ref-accent); }
+.diagnosis-summary { border-top: 2px solid var(--ref-accent); }
 .live-quote-panel { border-color: rgba(255,46,166,.4); background: rgba(255,46,166,.05); }
 .live-quote-grid > div, .binance-metrics > div { border-color: var(--ref-border); border-radius: 0; background: var(--ref-surface-2); }
 .metric-card strong, .live-quote-grid strong, .funnel-row b { color: #f4f4f5; }
@@ -410,4 +410,141 @@ main { width: min(1240px, 100%); padding-top: 0; }
   .scan-result-actions, .watchlist-item, .watchlist-right { width: 100%; }
   .scan-result-actions, .watchlist-item { align-items: stretch; flex-direction: column; }
   .scan-result-actions > *, .watchlist-right > * { width: 100%; text-align: center; }
+}
+
+/* Polish pass: clearer hierarchy, stronger keyboard support, safer touch targets. */
+:root {
+  --ref-text: #f4f4f5;
+  --ref-muted: #a1a1aa;
+  --ref-surface-3: #202024;
+  --ref-focus: #67e8f9;
+}
+
+body {
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+button, input, select { font-family: inherit; }
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--ref-focus) !important;
+  outline-offset: 3px;
+}
+
+.view-nav {
+  scrollbar-width: thin;
+  scrollbar-color: var(--ref-border) transparent;
+}
+
+.view-nav button,
+.account-nav button,
+.scan-toggle-group button,
+.scan-submit,
+.scan-result-footer button,
+.scan-save,
+.watchlist-right select,
+.watchlist-right button {
+  min-height: 40px;
+}
+
+.view-nav button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+}
+
+.account-nav button,
+.scan-toggle-group button,
+.watchlist-right select,
+.watchlist-right button {
+  transition: border-color 160ms ease, color 160ms ease, background-color 160ms ease;
+}
+
+.scan-form,
+.account-form {
+  gap: 22px;
+}
+
+.scan-input-grid input,
+.account-form input,
+.binance-toolbar select,
+.binance-toolbar input,
+.watchlist-right select {
+  transition: border-color 160ms ease, background-color 160ms ease;
+}
+
+.scan-input-grid input:hover,
+.account-form input:hover,
+.binance-toolbar select:hover,
+.binance-toolbar input:hover,
+.watchlist-right select:hover {
+  border-color: #52525b;
+  background: var(--ref-surface-3);
+}
+
+.scan-result-card,
+.watchlist-item,
+.platform-card,
+.workflow-panel,
+.inspector,
+.diagnosis-panel,
+.tools-view,
+.monitoring-view,
+.scan-form,
+.account-form {
+  transition: border-color 160ms ease, background-color 160ms ease;
+}
+
+.scan-result-card:hover,
+.watchlist-item:hover {
+  border-color: #3f3f46;
+  background: var(--ref-surface-2);
+}
+
+.scan-result-card:focus-within,
+.watchlist-item:focus-within,
+.platform-card:focus-within {
+  border-color: var(--ref-accent);
+}
+
+.scan-error,
+.account-error {
+  font-weight: 700;
+}
+
+.scan-empty {
+  min-height: 120px;
+  display: grid;
+  place-items: center;
+  gap: 12px;
+}
+
+@media (max-width: 560px) {
+  .view-nav {
+    flex-wrap: nowrap;
+    width: calc(100vw - 32px);
+    max-width: none;
+    overflow-x: auto;
+  }
+
+  .view-nav button { flex: 0 0 auto; }
+  .scan-heading h2 { font-size: 29px; }
+  .scan-result-footer { align-items: stretch; }
+  .scan-result-footer > span { line-height: 1.5; }
+  .watchlist-right { gap: 10px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
 }
