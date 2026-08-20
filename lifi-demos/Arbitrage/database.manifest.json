@@ -1,0 +1,39 @@
+{
+  "provider": "supabase",
+  "isolationMode": "per_product_project",
+  "requiresAuth": true,
+  "auth": {
+    "signups": "enabled",
+    "email": {
+      "enabled": true,
+      "confirmation": "disabled"
+    }
+  },
+  "requiresStorage": false,
+  "tables": [
+    {
+      "logicalName": "watchlist_items",
+      "rls": true,
+      "access": {
+        "select": "owner",
+        "insert": "owner",
+        "update": "owner",
+        "delete": "owner",
+        "ownerColumn": "user_id"
+      },
+      "reviewPersistence": true,
+      "columns": [
+        { "name": "user_id", "type": "uuid", "required": true },
+        { "name": "pair", "type": "text", "required": true },
+        { "name": "buy_exchange", "type": "text", "required": true },
+        { "name": "sell_exchange", "type": "text", "required": true },
+        { "name": "capital_usd", "type": "numeric", "required": true },
+        { "name": "spread_pct", "type": "numeric", "required": true },
+        { "name": "net_outcome_usd", "type": "numeric", "required": true },
+        { "name": "status", "type": "text", "required": true, "default": "'watching'" },
+        { "name": "notes", "type": "text" }
+      ]
+    }
+  ],
+  "apiRoutes": []
+}
