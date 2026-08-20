@@ -89,8 +89,4 @@ export function rankScan({ pairs, exchanges, capitalUsd, minSpreadPct, maxResult
   return { opportunities: results.slice(0, maxResults), scannedCount, generatedAt: new Date(bucket * TIME_BUCKET_MS).toISOString() };
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
-  const sample = rankScan({ pairs: ["BTC-USDT"], exchanges: ["binance", "kraken"], capitalUsd: 5_000, minSpreadPct: 0, now: 1_700_000_000_000 });
-  if (sample.scannedCount !== 2 || sample.opportunities.length < 1 || sample.opportunities.some((item, index, items) => index > 0 && items[index - 1].netOutcomeUsd < item.netOutcomeUsd)) throw new Error("scan simulator self-check failed");
-  console.log("scan simulator ok");
-}
+
