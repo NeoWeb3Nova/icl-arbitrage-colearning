@@ -80,7 +80,7 @@ export function ScanView({ onInvestigate, onAuthRequired }) {
       <form className="scan-form" onSubmit={submit}>
         <ToggleGroup label="1. Markets to scan" items={SCAN_PAIRS} selected={pairs} onToggle={toggle(setPairs)} />
         <ToggleGroup label="2. Venues to compare" items={SCAN_EXCHANGES} selected={exchanges} onToggle={toggle(setExchanges)} displayKey="name" />
-        <div className="scan-input-grid"><label>3. Trade size (USD)<input type="number" min="50" max="5000000" step="100" value={capitalUsd} onChange={(event) => setCapitalUsd(event.target.value)} /></label><label>Minimum gross spread (%)<input type="number" min="0" max="10" step="0.05" value={minSpreadPct} onChange={(event) => setMinSpreadPct(event.target.value)} /></label></div>
+        <div className="scan-input-grid"><label>3. Trade size (USD)<input type="number" min="50" max="5000000" step="50" value={capitalUsd} onChange={(event) => setCapitalUsd(event.target.value)} /></label><label>Minimum gross spread (%)<input type="number" min="0" max="10" step="0.05" value={minSpreadPct} onChange={(event) => setMinSpreadPct(event.target.value)} /></label></div>
         <button className="scan-submit" type="submit" disabled={status === "loading"}>{status === "loading" ? "Scanning…" : "Scan for opportunities"}</button>
         {status === "error" && <p className="scan-error" role="alert">至少选择一个市场、两个交易所，并输入有效资金与价差。</p>}
       </form>
